@@ -29,7 +29,7 @@ class ExplorePage extends GetView<ExploreController> {
             ),
           )));
         }
-        if (controller.state.exploreImages.length < 42 &&
+        if (controller.state.exploreImages.isEmpty &&
             exploreSnapshot.connectionState == ConnectionState.done) {
           return SliverToBoxAdapter(
               child: Center(
@@ -54,13 +54,12 @@ class ExplorePage extends GetView<ExploreController> {
 
         if (exploreSnapshot.hasData &&
             exploreSnapshot.connectionState == ConnectionState.done) {
-          final exploreImages = controller.state.exploreImages;
-
           return Obx(
             () => SliverGrid(
               delegate: SliverChildBuilderDelegate(
-                childCount: controller.state.imagesCount,
-                (context, index) => ApiImage(exploreImages[index]),
+                childCount: controller.state.imagesCountToView,
+                (context, index) =>
+                    ApiImage(controller.state.exploreImages[index]),
               ),
               gridDelegate: SliverQuiltedGridDelegate(
                 crossAxisCount: 2,

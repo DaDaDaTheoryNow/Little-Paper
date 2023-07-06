@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:little_paper/common/theme/app_colors.dart';
 
 class FavoriteIconButton extends StatelessWidget {
   const FavoriteIconButton({super.key});
@@ -18,17 +19,14 @@ class FavoriteIconButton extends StatelessWidget {
           child: Container(
             height: 15.h,
             width: 15.w,
-            decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(
-                        1.0.w,
-                        1.0.h,
-                      )),
-                ],
-                borderRadius: BorderRadius.circular(100),
-                color: const Color.fromARGB(255, 8, 52, 128)),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                  color: Colors.black,
+                  offset: Offset(
+                    1.0.w,
+                    1.0.h,
+                  )),
+            ], borderRadius: BorderRadius.circular(100), color: AppColors.blue),
             child: Center(
               child: Text(
                 "0",

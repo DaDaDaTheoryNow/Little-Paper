@@ -11,19 +11,20 @@ class ImageModel {
   final bool hasChildren;
   final String status;
   final String createdAt;
+  final bool favorite;
 
-  ImageModel({
-    required this.id,
-    required this.previewUrl,
-    required this.sampleUrl,
-    required this.fileUrl,
-    required this.tags,
-    required this.rating,
-    required this.score,
-    required this.hasChildren,
-    required this.status,
-    required this.createdAt,
-  });
+  ImageModel(
+      {required this.id,
+      required this.previewUrl,
+      required this.sampleUrl,
+      required this.fileUrl,
+      required this.tags,
+      required this.rating,
+      required this.score,
+      required this.hasChildren,
+      required this.status,
+      required this.createdAt,
+      required this.favorite});
 
   factory ImageModel.fromXml(xml.XmlElement element) {
     try {
@@ -38,6 +39,7 @@ class ImageModel {
         hasChildren: element.getAttribute('has_children') == 'true',
         status: element.getAttribute('status') ?? '',
         createdAt: element.getAttribute('created_at') ?? '',
+        favorite: false,
       );
     } catch (e) {
       return ImageModel(
@@ -51,7 +53,27 @@ class ImageModel {
         hasChildren: element.getAttribute('has_children') == 'true',
         status: element.getAttribute('status') ?? '',
         createdAt: element.getAttribute('created_at') ?? '',
+        favorite: false,
       );
     }
+  }
+
+  ImageModel copyWith({
+    int? id,
+    bool? favorite,
+  }) {
+    return ImageModel(
+      id: id ?? this.id,
+      previewUrl: previewUrl,
+      sampleUrl: sampleUrl,
+      fileUrl: fileUrl,
+      tags: tags,
+      rating: rating,
+      score: 0, // problem element in xml response
+      hasChildren: hasChildren,
+      status: status,
+      createdAt: createdAt,
+      favorite: favorite ?? this.favorite,
+    );
   }
 }
