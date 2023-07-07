@@ -14,7 +14,7 @@ class ApiImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final exploreController = Get.find<ExploreController>();
+    final ExploreController exploreController = Get.find<ExploreController>();
 
     return CachedNetworkImage(
       repeat: ImageRepeat.repeat,
@@ -54,7 +54,7 @@ class ApiImage extends StatelessWidget {
                 bool favorite = exploreController.state.exploreImages
                     .where((element) => element.id == imageModel.id)
                     .first
-                    .favorite;
+                    .isFavorite;
                 return Icon(
                   favorite ? Icons.star : Icons.star_border,
                   color: favorite ? Colors.yellow : AppColors.blue,

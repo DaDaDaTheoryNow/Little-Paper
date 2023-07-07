@@ -11,7 +11,7 @@ class ImageModel {
   final bool hasChildren;
   final String status;
   final String createdAt;
-  final bool favorite;
+  late final bool isFavorite;
 
   ImageModel(
       {required this.id,
@@ -24,9 +24,9 @@ class ImageModel {
       required this.hasChildren,
       required this.status,
       required this.createdAt,
-      required this.favorite});
+      required this.isFavorite});
 
-  factory ImageModel.fromXml(xml.XmlElement element) {
+  factory ImageModel.fromXml(xml.XmlElement element, bool isFavorite) {
     try {
       return ImageModel(
         id: int.parse(element.getAttribute('id') ?? '0'),
@@ -39,7 +39,7 @@ class ImageModel {
         hasChildren: element.getAttribute('has_children') == 'true',
         status: element.getAttribute('status') ?? '',
         createdAt: element.getAttribute('created_at') ?? '',
-        favorite: false,
+        isFavorite: isFavorite,
       );
     } catch (e) {
       return ImageModel(
@@ -53,14 +53,46 @@ class ImageModel {
         hasChildren: element.getAttribute('has_children') == 'true',
         status: element.getAttribute('status') ?? '',
         createdAt: element.getAttribute('created_at') ?? '',
-        favorite: false,
+        isFavorite: isFavorite,
       );
     }
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'previewUrl': previewUrl,
+      'sampleUrl': sampleUrl,
+      'fileUrl': fileUrl,
+      'tags': tags,
+      'rating': rating,
+      'score': score,
+      'hasChildren': hasChildren,
+      'status': status,
+      'createdAt': createdAt,
+      'isFavorite': isFavorite,
+    };
+  }
+
+  factory ImageModel.fromJson(Map<String, dynamic> json) {
+    return ImageModel(
+      id: json['id'],
+      previewUrl: json['previewUrl'],
+      sampleUrl: json['sampleUrl'],
+      fileUrl: json['fileUrl'],
+      tags: json['tags'],
+      rating: json['rating'],
+      score: json['score'],
+      hasChildren: json['hasChildren'],
+      status: json['status'],
+      createdAt: json['createdAt'],
+      isFavorite: json['isFavorite'],
+    );
+  }
+
   ImageModel copyWith({
     int? id,
-    bool? favorite,
+    bool? isFavorite,
   }) {
     return ImageModel(
       id: id ?? this.id,
@@ -69,11 +101,11 @@ class ImageModel {
       fileUrl: fileUrl,
       tags: tags,
       rating: rating,
-      score: 0, // problem element in xml response
+      score: 0,
       hasChildren: hasChildren,
       status: status,
       createdAt: createdAt,
-      favorite: favorite ?? this.favorite,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

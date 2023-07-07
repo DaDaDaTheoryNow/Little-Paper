@@ -3,17 +3,21 @@ import 'dart:async';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/models/image.dart';
-import 'package:little_paper/service/api_service.dart';
+import 'package:little_paper/services/api_service.dart';
+import 'package:little_paper/services/shared_preferences/shared_favorite_image.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../service/cache/clear_image_cache.dart';
-import '../../service/parse/parse_combined_tags_to_string.dart';
-import '../../service/parse/parse_xml_to_models.dart';
+import '../../services/cache/clear_image_cache.dart';
+import '../../services/parse/parse_combined_tags_to_string.dart';
+import '../../services/parse/parse_xml_to_models.dart';
 import 'state.dart';
 
 class ExploreController extends GetxController {
   final state = ExploreState();
   ExploreController();
 
+  final SharedFavoriteImage sharedFavoriteImage =
+      SharedFavoriteImage(); // custom class for convenient saving favorite images
   final DefaultCacheManager _manager = DefaultCacheManager();
   Timer? _timer;
 
@@ -33,21 +37,33 @@ class ExploreController extends GetxController {
     state.fetchDataFuture = fetchData(state.currentPage);
   }
 
-  void handleFavoriteButton(int id) {
+  Future<void> handleFavoriteButton(int id) async {
     List<ImageModel> updatedImages = List.from(state.exploreImages);
 
     final index = updatedImages.indexWhere((element) => element.id == id);
 
     if (index != -1 && id != 0) {
       ImageModel updatedImage = updatedImages[index].copyWith(
-        favorite: !updatedImages[index].favorite,
+        isFavorite: !updatedImages[index].isFavorite,
       );
 
       updatedImages[index] = updatedImage;
 
       state.exploreImages = updatedImages; // update favorite button
-      state.favoriteImages
-          .add(state.exploreImages[index]); // adding in favorite state
+
+      // adding in favorite state
+      (state.exploreImages[index].isFavorite)
+          ? {
+              await sharedFavoriteImage
+                  .saveFavoriteImageList(state.exploreImages[index]),
+              state.favoriteImages.add(state.exploreImages[index])
+            }
+          : {
+              await sharedFavoriteImage
+                  .removeFavoriteImage(state.exploreImages[index]),
+              state.favoriteImages.removeWhere(
+                  (element) => element.id == state.exploreImages[index].id)
+            };
     }
   }
 
@@ -69,7 +85,7 @@ class ExploreController extends GetxController {
         await ApiService().fetchData(42, parsedCombinedTags, state.currentPage);
 
     // parse response
-    final parsedXmlResponse = parseXml(xmlResponse);
+    final parsedXmlResponse = await parseXml(xmlResponse);
     state.exploreImages.addAll(List<ImageModel>.from(parsedXmlResponse));
     state.exploreImagesCache.addAll(List<ImageModel>.from(parsedXmlResponse));
 
@@ -112,9 +128,10 @@ class ExploreController extends GetxController {
 
     state.fetchDataFuture = fetchData(state.currentPage);
     state.scrollController.addListener(scrollPositionListener);
+    state.favoriteImages = await sharedFavoriteImage.getFavoriteImageList();
 
     _timer = Timer.periodic(
-        const Duration(seconds: 5), (timer) => deleteImagesFromCache());
+        const Duration(seconds: 30), (timer) => deleteImagesFromCache());
 
     super.onInit();
   }

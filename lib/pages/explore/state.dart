@@ -13,7 +13,7 @@ class ExploreState {
   List<ImageModel> get exploreImages => _exploreImages;
   set exploreImages(value) => _exploreImages.value = value;
 
-  // list state with images data for more convenient use images cache
+  // list state with images data for convenient use images cache
   List<ImageModel> _exploreImagesCache = [];
   List<ImageModel> get exploreImagesCache => _exploreImagesCache;
   set exploreImagesCache(value) => _exploreImagesCache = value;
@@ -29,9 +29,9 @@ class ExploreState {
   set imagesCountToView(value) => _imagesCountToView.value = value;
 
   // int state for current page (using in fetching images from api)
-  final RxInt _currentPage = 0.obs;
-  int get currentPage => _currentPage.value;
-  set currentPage(value) => _currentPage.value = value;
+  int _currentPage = 0;
+  int get currentPage => _currentPage;
+  set currentPage(value) => _currentPage = value;
 
   // bool state for fetching more images
   final RxBool _fetchingMoreImages = false.obs;

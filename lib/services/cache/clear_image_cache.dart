@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 
 deleteFirstThirdImagesFromCache(List cacheList) async {
-  if (cacheList.isNotEmpty && cacheList.length > 50) {
-    int length = (cacheList.length / 5).ceil();
+  if (cacheList.isNotEmpty && cacheList.length > 80) {
+    int length = (cacheList.length / 8).ceil();
     final deletedList = cacheList.sublist(0, length);
 
     for (var imageModel in deletedList) {
