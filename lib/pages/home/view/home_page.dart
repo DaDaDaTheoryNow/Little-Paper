@@ -10,9 +10,18 @@ import '../../explore/view/explore_page.dart';
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
 
-  AppBar _buildAppBar() {
+  _buildAppBar() {
     return AppBar(
-      title: const Text("Little Paper"),
+      title: Obx(() {
+        return controller.state.internetConnection
+            ? const Text("Little Paper")
+            : Text(
+                "Little Paper - OFFLINE",
+                style: TextStyle(
+                  fontSize: 20.sp,
+                ),
+              );
+      }),
       leading: IconButton(
         onPressed: () {},
         icon: const Icon(

@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -17,18 +21,76 @@ class ExplorePage extends GetView<ExploreController> {
     return Builder(
       builder: ((context) {
         if (exploreSnapshot.hasError) {
-          return SliverToBoxAdapter(
-              child: Center(
-                  child: Text(
-            textAlign: TextAlign.center,
-            "Any problems. Check Internet Connection",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 20.sp,
-            ),
-          )));
+          if (exploreSnapshot.error is DioException &&
+              exploreSnapshot.error.toString().contains("Request Cancelled")) {
+            return SliverToBoxAdapter(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  textAlign: TextAlign.center,
+                  "Are you in a hurry somewhere?",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.sp,
+                  ),
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                Text(
+                  textAlign: TextAlign.center,
+                  "The download will continue now, but you won't write off any more.",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.sp,
+                  ),
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                Text(
+                  textAlign: TextAlign.center,
+                  "You will have to wait to continue.",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.sp,
+                  ),
+                ),
+              ],
+            ));
+          } else {
+            return SliverToBoxAdapter(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  textAlign: TextAlign.center,
+                  "Any problems. Check Internet Connection",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.sp,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                ElevatedButton(
+                  onPressed: () => controller.handleReloadData(),
+                  child: const Text(
+                    "Reload",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                )
+              ],
+            ));
+          }
         }
+
         if (controller.state.exploreImages.isEmpty &&
             exploreSnapshot.connectionState == ConnectionState.done) {
           return SliverToBoxAdapter(
@@ -87,7 +149,17 @@ class ExplorePage extends GetView<ExploreController> {
           !controller.state.fetchingMoreImages &&
           exploreSnapshot.connectionState == ConnectionState.done) {
         return ElevatedButton(
-          onPressed: () async => await controller.handleFetchingMoreImages(),
+          onPressed: () async {
+            final connectivityResult =
+                await (Connectivity().checkConnectivity());
+
+            if (connectivityResult == ConnectivityResult.none) {
+              Get.snackbar(
+                  "Error", "For loading more images need internet connection");
+            } else {
+              await controller.handleFetchingMoreImages();
+            }
+          },
           child: const Text(
             "More",
             style: TextStyle(color: Colors.black),

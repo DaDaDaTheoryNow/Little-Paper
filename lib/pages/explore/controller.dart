@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:little_paper/models/image.dart';
 import 'package:little_paper/services/api_service.dart';
 import 'package:little_paper/services/shared_preferences/shared_favorite_image.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/cache/clear_image_cache.dart';
 import '../../services/parse/parse_combined_tags_to_string.dart';
@@ -18,15 +17,15 @@ class ExploreController extends GetxController {
 
   final SharedFavoriteImage sharedFavoriteImage =
       SharedFavoriteImage(); // custom class for convenient saving favorite images
-  final DefaultCacheManager _manager = DefaultCacheManager();
+
+  final ApiService apiService = ApiService();
+
+  final DefaultCacheManager manager = DefaultCacheManager();
+
   Timer? _timer;
 
-  void handleTagButton(int index) async {
-    List<dynamic> updatedTags = List.from(state.tags);
-    updatedTags[index] = [state.tags[index][0], !state.tags[index][1]];
-    state.tags = updatedTags;
-
-    await _manager.emptyCache(); // clear images cache
+  void handleReloadData() async {
+    await manager.emptyCache(); // clear images cache
 
     // update explore page
     state.currentPage = 0;
@@ -35,6 +34,14 @@ class ExploreController extends GetxController {
     state.exploreImages.clear();
     state.exploreImagesCache.clear();
     state.fetchDataFuture = fetchData(state.currentPage);
+  }
+
+  void handleTagButton(int index) {
+    List<dynamic> updatedTags = List.from(state.tags);
+    updatedTags[index] = [state.tags[index][0], !state.tags[index][1]];
+    state.tags = updatedTags;
+
+    handleReloadData();
   }
 
   Future<void> handleFavoriteButton(int id) async {
@@ -55,7 +62,7 @@ class ExploreController extends GetxController {
       (state.exploreImages[index].isFavorite)
           ? {
               await sharedFavoriteImage
-                  .saveFavoriteImageList(state.exploreImages[index]),
+                  .saveFavoriteImage(state.exploreImages[index]),
               state.favoriteImages.add(state.exploreImages[index])
             }
           : {
@@ -79,15 +86,31 @@ class ExploreController extends GetxController {
   }
 
   Future<List<ImageModel>> fetchData(int page) async {
+    apiService.cancelFetchingData(); // cancel other request if had
+
     String parsedCombinedTags = parseCombinedTags(state.tags);
     // fetch images in explore
     String xmlResponse =
-        await ApiService().fetchData(42, parsedCombinedTags, state.currentPage);
+        await apiService.fetchData(42, parsedCombinedTags, state.currentPage);
 
     // parse response
-    final parsedXmlResponse = await parseXml(xmlResponse);
-    state.exploreImages.addAll(List<ImageModel>.from(parsedXmlResponse));
-    state.exploreImagesCache.addAll(List<ImageModel>.from(parsedXmlResponse));
+    final parsedXmlResponse = parseXml(xmlResponse);
+
+    // check to favorite
+    final sharedFavoriteImageList =
+        await sharedFavoriteImage.getFavoriteImagesList();
+
+    for (var image in parsedXmlResponse) {
+      final matchingElement = sharedFavoriteImageList.firstWhere(
+          (x) => x.id == image.id,
+          orElse: () => image.copyWith(isFavorite: false));
+      final updatedImage =
+          image.copyWith(isFavorite: matchingElement.isFavorite);
+
+      // add images to states
+      state.exploreImages.add(updatedImage);
+      state.exploreImagesCache.add(updatedImage);
+    }
 
     // set images count to view
     state.imagesCountToView += 42;
@@ -115,7 +138,7 @@ class ExploreController extends GetxController {
 
   @override
   void onInit() async {
-    await _manager.emptyCache();
+    await manager.emptyCache();
 
     state.tags = [
       ["1girl", false],
@@ -128,7 +151,7 @@ class ExploreController extends GetxController {
 
     state.fetchDataFuture = fetchData(state.currentPage);
     state.scrollController.addListener(scrollPositionListener);
-    state.favoriteImages = await sharedFavoriteImage.getFavoriteImageList();
+    state.favoriteImages = await sharedFavoriteImage.getFavoriteImagesList();
 
     _timer = Timer.periodic(
         const Duration(seconds: 30), (timer) => deleteImagesFromCache());

@@ -26,7 +26,7 @@ class ImageModel {
       required this.createdAt,
       required this.isFavorite});
 
-  factory ImageModel.fromXml(xml.XmlElement element, bool isFavorite) {
+  factory ImageModel.fromXml(xml.XmlElement element) {
     try {
       return ImageModel(
         id: int.parse(element.getAttribute('id') ?? '0'),
@@ -39,7 +39,7 @@ class ImageModel {
         hasChildren: element.getAttribute('has_children') == 'true',
         status: element.getAttribute('status') ?? '',
         createdAt: element.getAttribute('created_at') ?? '',
-        isFavorite: isFavorite,
+        isFavorite: false,
       );
     } catch (e) {
       return ImageModel(
@@ -53,7 +53,7 @@ class ImageModel {
         hasChildren: element.getAttribute('has_children') == 'true',
         status: element.getAttribute('status') ?? '',
         createdAt: element.getAttribute('created_at') ?? '',
-        isFavorite: isFavorite,
+        isFavorite: false,
       );
     }
   }

@@ -23,7 +23,17 @@ class ApiImage extends StatelessWidget {
         return Center(
             child: CircularProgressIndicator(value: downloadProgress.progress));
       },
-      errorWidget: (context, url, error) => const Icon(Icons.error),
+      errorWidget: (context, url, error) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error),
+          ElevatedButton(
+              onPressed: () {
+                exploreController.handleReloadData();
+              },
+              child: const Text("Reload")),
+        ],
+      ),
       imageBuilder: (context, imageProvider) {
         return Stack(children: [
           Container(

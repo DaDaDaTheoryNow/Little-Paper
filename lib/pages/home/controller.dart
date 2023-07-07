@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +11,7 @@ class HomeController extends GetxController {
   final state = HomeState();
   HomeController();
 
+  StreamSubscription? subscription;
   PageController? pageController;
   List<BottomNavyBarItem> bottomNavigationBarItems = [
     BottomNavyBarItem(
@@ -44,12 +48,24 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     pageController = PageController();
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        state.internetConnection = false;
+      } else {
+        state.internetConnection = true;
+      }
+    });
+
     super.onInit();
   }
 
   @override
   void onClose() {
     pageController!.dispose();
+    subscription!.cancel();
+
     super.onClose();
   }
 }
