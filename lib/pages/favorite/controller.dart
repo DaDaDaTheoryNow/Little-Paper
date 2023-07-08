@@ -31,16 +31,19 @@ class FavoriteController extends GetxController {
   }
 
   Future<void> handleFavoriteButton(int id) async {
-    List<ImageModel> updatedImages = List.from(state.favoriteImages);
+    List<ImageModel> updatedImages;
 
-    final index = updatedImages.indexWhere((element) => element.id == id);
+    final indexInFavoriteImages =
+        state.favoriteImages.indexWhere((element) => element.id == id);
 
-    if (index != -1 && id != 0) {
-      ImageModel updatedImage = updatedImages[index].copyWith(
-        isFavorite: !updatedImages[index].isFavorite,
+    if (indexInFavoriteImages != -1) {
+      updatedImages = List.from(state.favoriteImages);
+
+      ImageModel updatedImage = updatedImages[indexInFavoriteImages].copyWith(
+        isFavorite: !updatedImages[indexInFavoriteImages].isFavorite,
       );
 
-      updatedImages[index] = updatedImage;
+      updatedImages[indexInFavoriteImages] = updatedImage;
 
       state.favoriteImages = updatedImages; // update favorite button
     }

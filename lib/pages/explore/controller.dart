@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/models/image.dart';
+import 'package:little_paper/pages/favorite/controller.dart';
 import 'package:little_paper/services/api_service.dart';
 import 'package:little_paper/services/shared_preferences/shared_favorite_image.dart';
 
@@ -45,32 +46,48 @@ class ExploreController extends GetxController {
   }
 
   Future<void> handleFavoriteButton(int id) async {
-    List<ImageModel> updatedImages = List.from(state.exploreImages);
+    List<ImageModel> updatedImages;
 
-    final index = updatedImages.indexWhere((element) => element.id == id);
+    final indexInExploreImages =
+        state.exploreImages.indexWhere((element) => element.id == id);
+    final indexInFavoriteImages =
+        state.favoriteImages.indexWhere((element) => element.id == id);
 
-    if (index != -1 && id != 0) {
-      ImageModel updatedImage = updatedImages[index].copyWith(
-        isFavorite: !updatedImages[index].isFavorite,
+    if (indexInExploreImages != -1) {
+      updatedImages = List.from(state.exploreImages);
+
+      ImageModel updatedImage = updatedImages[indexInExploreImages].copyWith(
+        isFavorite: !updatedImages[indexInExploreImages].isFavorite,
       );
 
-      updatedImages[index] = updatedImage;
+      updatedImages[indexInExploreImages] = updatedImage;
 
-      state.exploreImages = updatedImages; // update favorite button
+      state.exploreImages = updatedImages;
 
-      // adding in favorite state
-      (state.exploreImages[index].isFavorite)
-          ? {
-              await sharedFavoriteImage
-                  .saveFavoriteImage(state.exploreImages[index]),
-              state.favoriteImages.add(state.exploreImages[index])
-            }
-          : {
-              await sharedFavoriteImage
-                  .removeFavoriteImage(state.exploreImages[index]),
-              state.favoriteImages.removeWhere(
-                  (element) => element.id == state.exploreImages[index].id)
-            };
+      if (updatedImage.isFavorite) {
+        await sharedFavoriteImage.saveFavoriteImage(updatedImage);
+        state.favoriteImages.add(updatedImage);
+      } else {
+        await sharedFavoriteImage.removeFavoriteImage(updatedImage);
+        state.favoriteImages
+            .removeWhere((element) => element.id == updatedImage.id);
+      }
+    } else if (indexInFavoriteImages != -1) {
+      await sharedFavoriteImage
+          .removeFavoriteImage(state.favoriteImages[indexInFavoriteImages]);
+      state.favoriteImages.removeWhere((element) => element.id == id);
+    } else {
+      final List oldFavoriteImages =
+          Get.find<FavoriteController>().state.favoriteImages;
+      final oldIndex =
+          oldFavoriteImages.indexWhere((element) => element.id == id);
+
+      if (oldIndex != -1) {
+        await sharedFavoriteImage
+            .saveFavoriteImage(oldFavoriteImages[oldIndex]);
+        state.favoriteImages
+            .add(oldFavoriteImages[oldIndex].copyWith(isFavorite: true));
+      }
     }
   }
 
@@ -89,6 +106,7 @@ class ExploreController extends GetxController {
     apiService.cancelFetchingData(); // cancel other request if had
 
     String parsedCombinedTags = parseCombinedTags(state.tags);
+
     // fetch images in explore
     String xmlResponse =
         await apiService.fetchData(42, parsedCombinedTags, state.currentPage);
@@ -100,17 +118,17 @@ class ExploreController extends GetxController {
     final sharedFavoriteImageList =
         await sharedFavoriteImage.getFavoriteImagesList();
 
-    for (var image in parsedXmlResponse) {
+    final updatedImages = parsedXmlResponse.map((image) {
       final matchingElement = sharedFavoriteImageList.firstWhere(
           (x) => x.id == image.id,
           orElse: () => image.copyWith(isFavorite: false));
-      final updatedImage =
-          image.copyWith(isFavorite: matchingElement.isFavorite);
 
-      // add images to states
-      state.exploreImages.add(updatedImage);
-      state.exploreImagesCache.add(updatedImage);
-    }
+      return image.copyWith(isFavorite: matchingElement.isFavorite);
+    }).toList();
+
+    // add images to states
+    state.exploreImages.addAll(List<ImageModel>.from(updatedImages));
+    state.exploreImagesCache.addAll(List<ImageModel>.from(updatedImages));
 
     // set images count to view
     state.imagesCountToView += 42;
@@ -131,6 +149,7 @@ class ExploreController extends GetxController {
   void deleteImagesFromCache() async {
     final deletedCache =
         await deleteFirstThirdImagesFromCache(state.exploreImagesCache);
+
     if (deletedCache != null) {
       state.exploreImagesCache = deletedCache;
     }

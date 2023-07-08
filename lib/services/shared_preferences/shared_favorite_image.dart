@@ -7,8 +7,10 @@ class SharedFavoriteImage {
   Future<void> saveFavoriteImage(ImageModel imageModel) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    final saveImageModel = imageModel.copyWith(isFavorite: true);
+
     List<String> imageListJson = prefs.getStringList('favoriteImages') ?? [];
-    imageListJson.add(jsonEncode(imageModel.toJson()));
+    imageListJson.add(jsonEncode(saveImageModel.toJson()));
     await prefs.setStringList('favoriteImages', imageListJson);
   }
 
