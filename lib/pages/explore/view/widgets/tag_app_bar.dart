@@ -6,32 +6,6 @@ import 'package:little_paper/pages/explore/controller.dart';
 
 import '../../../../common/theme/app_colors.dart';
 
-Widget _buildTagButton(String tag, ExploreController exploreController,
-    int index, BuildContext context) {
-  return Container(
-      margin: EdgeInsets.all(5.w),
-      child: Obx(
-        () => ElevatedButton(
-          onPressed: () {
-            exploreController.handleTagButton(index);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: (exploreController.state.tags[index][1] == true)
-                ? const Color.fromARGB(255, 8, 52, 128)
-                : AppColors.grey,
-          ),
-          child: Text(
-            tag,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ));
-}
-
 class TagsAppBar extends StatelessWidget {
   final ExploreController exploreController;
 
@@ -56,5 +30,31 @@ class TagsAppBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildTagButton(String tag, ExploreController exploreController,
+      int index, BuildContext context) {
+    return Container(
+        margin: EdgeInsets.all(5.w),
+        child: Obx(
+          () => ElevatedButton(
+            onPressed: () {
+              exploreController.handleTagButton(index);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: (exploreController.state.tags[index][1] == true)
+                  ? const Color.fromARGB(255, 8, 52, 128)
+                  : AppColors.grey,
+            ),
+            child: Text(
+              tag,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ));
   }
 }

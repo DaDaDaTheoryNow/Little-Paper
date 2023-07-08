@@ -1,12 +1,15 @@
 import 'package:get/get.dart';
 import 'package:little_paper/pages/explore/bindings.dart';
 import 'package:little_paper/pages/explore/view/explore_page.dart';
+import 'package:little_paper/pages/favorite/bindings.dart';
 import 'package:little_paper/pages/home/view/home_page.dart';
 
+import '../pages/favorite/view/favorite_page.dart';
 import '../pages/home/bindings.dart';
 
 class AppPages {
   static const home = "/home";
+  static const favorite = "/favorite";
 
   static const explore = "/explore";
   static const search = "/search";
@@ -25,6 +28,13 @@ class AppPages {
       name: explore,
       page: () => const ExplorePage(),
       binding: ExploreBinding(),
+    ),
+
+    // explore
+    GetPage(
+      name: favorite,
+      page: () => const FavoritePage(),
+      binding: FavoriteBinding(),
     )
 
     // settings

@@ -4,17 +4,23 @@ import 'package:get/get.dart';
 import 'package:little_paper/common/theme/app_colors.dart';
 import 'package:little_paper/pages/explore/controller.dart';
 
+import 'package:little_paper/pages/home/controller.dart';
+
 class FavoriteIconButton extends StatelessWidget {
   const FavoriteIconButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     final ExploreController exploreController = Get.find<ExploreController>();
+    final HomeController homeController = Get.find<HomeController>();
     return Stack(
       children: [
         IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.favorite),
+          onPressed: () => homeController.handleGoToFavoritePage(),
+          icon: const Icon(
+            Icons.favorite,
+            color: Color.fromARGB(255, 99, 99, 99),
+          ),
         ),
         Positioned(
           left: 3.w,

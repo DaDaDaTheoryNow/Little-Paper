@@ -3,18 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/models/image.dart';
-import 'package:little_paper/pages/explore/controller.dart';
+import 'package:little_paper/pages/favorite/controller.dart';
 
 import '../../../../common/theme/app_colors.dart';
+import '../../../explore/controller.dart';
 
-class ApiImage extends StatelessWidget {
+class FavoriteApiImage extends StatelessWidget {
   final ImageModel imageModel;
 
-  const ApiImage(this.imageModel, {super.key});
+  const FavoriteApiImage(this.imageModel, {super.key});
 
   @override
   Widget build(BuildContext context) {
     final ExploreController exploreController = Get.find<ExploreController>();
+    final FavoriteController favoriteController =
+        Get.find<FavoriteController>();
 
     return CachedNetworkImage(
       repeat: ImageRepeat.repeat,
@@ -26,10 +29,15 @@ class ApiImage extends StatelessWidget {
       errorWidget: (context, url, error) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error),
+          const Icon(
+            Icons.error,
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
           ElevatedButton(
               onPressed: () {
-                exploreController.handleReloadData();
+                favoriteController.handleReloadData();
               },
               child: const Text("Reload",
                   style: TextStyle(
@@ -62,9 +70,10 @@ class ApiImage extends StatelessWidget {
             child: IconButton(
               onPressed: () {
                 exploreController.handleFavoriteButton(imageModel.id);
+                favoriteController.handleFavoriteButton(imageModel.id);
               },
               icon: Obx(() {
-                bool favorite = exploreController.state.exploreImages
+                bool favorite = favoriteController.state.favoriteImages
                     .where((element) => element.id == imageModel.id)
                     .first
                     .isFavorite;

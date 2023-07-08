@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../common/widgets/bottom_navigation_bar.dart';
 import 'state.dart';
@@ -38,12 +40,24 @@ class HomeController extends GetxController {
         title: const Text("Settings")),
   ];
 
-  handleOnItemSelected(index) {
+  void handleOnItemSelected(index) {
     state.currentIndex = index;
     pageController!.jumpToPage(state.currentIndex);
   }
 
-  handleOnPageChanged(index) => state.currentIndex = index;
+  void handleOnPageChanged(index) => state.currentIndex = index;
+
+  void handleGoToFavoritePage() {
+    Get.toNamed("favorite");
+  }
+
+  void handleGoToTelegram() async {
+    var url = Uri.parse("https://t.me/dadada17");
+
+    state.internetConnection
+        ? await launchUrl(url, mode: LaunchMode.externalApplication)
+        : Get.snackbar("Error", "You need internet connection");
+  }
 
   @override
   void onInit() {

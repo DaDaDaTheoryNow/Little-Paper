@@ -24,7 +24,7 @@ class ExploreController extends GetxController {
 
   Timer? _timer;
 
-  void handleReloadData() async {
+  Future<void> handleReloadData() async {
     await manager.emptyCache(); // clear images cache
 
     // update explore page

@@ -1,15 +1,63 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:little_paper/pages/explore/controller.dart';
 import 'package:little_paper/pages/explore/view/widgets/api_image.dart';
 import 'package:little_paper/pages/explore/view/widgets/tag_app_bar.dart';
+import 'package:little_paper/pages/home/controller.dart';
 
 class ExplorePage extends GetView<ExploreController> {
   const ExplorePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Obx(
+      () => FutureBuilder(
+          future: controller.state.fetchDataFuture,
+          builder: (context, exploreSnapshot) {
+            // Restore scroll position
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              controller.state.scrollController.jumpTo(
+                controller.state.scrollPosition,
+              );
+            });
+
+            return LiquidPullToRefresh(
+              color: const Color.fromARGB(71, 9, 47, 112),
+              showChildOpacityTransition: false,
+              animSpeedFactor: 2,
+              height: 80.h,
+              onRefresh: () => controller.handleReloadData(),
+              child: CustomScrollView(
+                  cacheExtent: 3000,
+                  key: const PageStorageKey("exploreImages"),
+                  controller: controller.state.scrollController,
+                  slivers: [
+                    _buildAppBar(),
+                    _buildExploreImages(exploreSnapshot),
+                    SliverPadding(
+                      padding: EdgeInsets.only(bottom: 60.h),
+                      sliver: SliverToBoxAdapter(
+                        child: Center(
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10.w),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: _buildFetchMoreImages(exploreSnapshot),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]),
+            );
+          }),
+    ));
+  }
 
   _buildAppBar() {
     return TagsAppBar(controller);
@@ -28,18 +76,6 @@ class ExplorePage extends GetView<ExploreController> {
                 Text(
                   textAlign: TextAlign.center,
                   "Are you in a hurry somewhere?",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.sp,
-                  ),
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Text(
-                  textAlign: TextAlign.center,
-                  "The download will continue now, but you won't write off any more.",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -93,13 +129,27 @@ class ExplorePage extends GetView<ExploreController> {
             exploreSnapshot.connectionState == ConnectionState.done) {
           return SliverToBoxAdapter(
               child: Center(
-                  child: Text(
-            "Nothing To View, try other tags",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 20.sp,
-            ),
+                  child: Column(
+            children: [
+              Text(
+                "Nothing To View, try other tags",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.sp,
+                ),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              ElevatedButton(
+                onPressed: () => controller.handleReloadData(),
+                child: const Text(
+                  "Reload",
+                  style: TextStyle(color: Colors.black),
+                ),
+              )
+            ],
           )));
         }
 
@@ -148,14 +198,14 @@ class ExplorePage extends GetView<ExploreController> {
           exploreSnapshot.connectionState == ConnectionState.done) {
         return ElevatedButton(
           onPressed: () async {
-            final connectivityResult =
-                await (Connectivity().checkConnectivity());
+            final internetConnection =
+                Get.find<HomeController>().state.internetConnection;
 
-            if (connectivityResult == ConnectivityResult.none) {
+            if (internetConnection) {
+              await controller.handleFetchingMoreImages();
+            } else {
               Get.snackbar(
                   "Error", "For loading more images need internet connection");
-            } else {
-              await controller.handleFetchingMoreImages();
             }
           },
           child: const Text(
@@ -173,45 +223,5 @@ class ExplorePage extends GetView<ExploreController> {
 
       return Container();
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Obx(
-      () => FutureBuilder(
-          future: controller.state.fetchDataFuture,
-          builder: (context, exploreSnapshot) {
-            // Restore scroll position
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              controller.state.scrollController.jumpTo(
-                controller.state.scrollPosition,
-              );
-            });
-
-            return CustomScrollView(
-                cacheExtent: 3000,
-                key: const PageStorageKey("exploreImages"),
-                controller: controller.state.scrollController,
-                slivers: [
-                  _buildAppBar(),
-                  _buildExploreImages(exploreSnapshot),
-                  SliverPadding(
-                    padding: EdgeInsets.only(bottom: 60.h),
-                    sliver: SliverToBoxAdapter(
-                      child: Center(
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10.w),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: _buildFetchMoreImages(exploreSnapshot),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ]);
-          }),
-    ));
   }
 }

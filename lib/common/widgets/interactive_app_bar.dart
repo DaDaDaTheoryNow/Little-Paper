@@ -10,7 +10,9 @@ class InteractiveAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      automaticallyImplyLeading: false,
       floating: true,
+      snap: true,
       toolbarHeight: 41.h,
       backgroundColor: AppColors.opacityGrey,
       flexibleSpace: Padding(

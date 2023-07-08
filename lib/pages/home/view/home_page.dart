@@ -10,6 +10,17 @@ import '../../explore/view/explore_page.dart';
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: _buildPageView(),
+      floatingActionButton: Obx(() => _buildBottomNavigationBar()),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      drawer: const NavigationDrawer(),
+    );
+  }
+
   _buildAppBar() {
     return AppBar(
       title: Obx(() {
@@ -22,16 +33,10 @@ class HomePage extends GetView<HomeController> {
                 ),
               );
       }),
-      leading: IconButton(
-        onPressed: () {},
-        icon: const Icon(
-          Icons.menu,
-          color: Colors.white,
-        ),
-      ),
       actions: const [
         FavoriteIconButton(),
       ],
+      iconTheme: const IconThemeData(color: Colors.white),
     );
   }
 
@@ -61,14 +66,54 @@ class HomePage extends GetView<HomeController> {
       items: controller.bottomNavigationBarItems,
     );
   }
+}
+
+class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildPageView(),
-      floatingActionButton: Obx(() => _buildBottomNavigationBar()),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    return Drawer(
+      backgroundColor: Colors.white,
+      width: 80.w,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  children: const [
+                    TextSpan(text: 'Made\n'),
+                    TextSpan(
+                      text: 'by\n',
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    TextSpan(text: 'Vladislav\n'),
+                    TextSpan(text: 'Smirnov\n'),
+                  ],
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                Get.find<HomeController>().handleGoToTelegram();
+              },
+              icon: const Icon(Icons.telegram),
+              color: Colors.black,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
