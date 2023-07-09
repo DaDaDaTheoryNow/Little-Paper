@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:little_paper/models/image.dart';
+import 'package:little_paper/common/models/image.dart';
 
 class FavoriteState {
   // list state for favorite images

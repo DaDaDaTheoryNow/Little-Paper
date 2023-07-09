@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:little_paper/models/image.dart';
+import 'package:little_paper/common/models/image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedFavoriteImage {

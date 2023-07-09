@@ -11,6 +11,9 @@ class AppTheme {
           color: AppColors.grey,
           centerTitle: true,
           titleTextStyle: TextStyle(fontFamily: "Indie", fontSize: 32)),
+      iconTheme: const IconThemeData(
+        color: Colors.white,
+      ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(
           color: Color.fromARGB(255, 8, 52, 128)));
 

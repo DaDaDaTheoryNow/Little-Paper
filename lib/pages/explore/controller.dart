@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
-import 'package:little_paper/models/image.dart';
-import 'package:little_paper/pages/favorite/controller.dart';
-import 'package:little_paper/services/api_service.dart';
-import 'package:little_paper/services/shared_preferences/shared_favorite_image.dart';
 
-import '../../services/cache/clear_image_cache.dart';
-import '../../services/parse/parse_combined_tags_to_string.dart';
-import '../../services/parse/parse_xml_to_models.dart';
+import 'package:little_paper/pages/favorite/controller.dart';
+
+import '../../common/models/image.dart';
+import '../../common/services/api_service.dart';
+import '../../common/services/cache/clear_image_cache.dart';
+import '../../common/services/parse/parse_combined_tags_to_string.dart';
+import '../../common/services/parse/parse_xml_to_models.dart';
+import '../../common/services/shared_preferences/shared_favorite_image.dart';
 import 'state.dart';
 
 class ExploreController extends GetxController {
@@ -109,7 +110,7 @@ class ExploreController extends GetxController {
 
     // fetch images in explore
     String xmlResponse =
-        await apiService.fetchData(42, parsedCombinedTags, state.currentPage);
+        await apiService.fetchData(39, parsedCombinedTags, state.currentPage);
 
     // parse response
     final parsedXmlResponse = parseXml(xmlResponse);
@@ -131,7 +132,7 @@ class ExploreController extends GetxController {
     state.exploreImagesCache.addAll(List<ImageModel>.from(updatedImages));
 
     // set images count to view
-    state.imagesCountToView += 42;
+    state.imagesCountToView += 39;
 
     if (state.exploreImages.length < state.imagesCountToView &&
         state.exploreImages.isNotEmpty) {
@@ -157,6 +158,8 @@ class ExploreController extends GetxController {
 
   @override
   void onInit() async {
+    state.favoriteImages = await sharedFavoriteImage.getFavoriteImagesList();
+
     await manager.emptyCache();
 
     state.tags = [
@@ -170,7 +173,6 @@ class ExploreController extends GetxController {
 
     state.fetchDataFuture = fetchData(state.currentPage);
     state.scrollController.addListener(scrollPositionListener);
-    state.favoriteImages = await sharedFavoriteImage.getFavoriteImagesList();
 
     _timer = Timer.periodic(
         const Duration(seconds: 30), (timer) => deleteImagesFromCache());

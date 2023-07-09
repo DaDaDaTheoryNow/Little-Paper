@@ -6,10 +6,14 @@ import 'package:little_paper/pages/home/view/home_page.dart';
 
 import '../pages/favorite/view/favorite_page.dart';
 import '../pages/home/bindings.dart';
+import '../pages/image/bindings.dart';
+import '../pages/image/view/image_page.dart';
 
 class AppPages {
   static const home = "/home";
   static const favorite = "/favorite";
+
+  static const image = "/image";
 
   static const explore = "/explore";
   static const search = "/search";
@@ -35,6 +39,13 @@ class AppPages {
       name: favorite,
       page: () => const FavoritePage(),
       binding: FavoriteBinding(),
+    ),
+
+    // image
+    GetPage(
+      name: image,
+      page: () => const ImagePage(),
+      binding: ImageBinding(),
     )
 
     // settings

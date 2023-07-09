@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:little_paper/pages/favorite/view/widgets/back_app_bar.dart';
-import 'package:little_paper/pages/home/controller.dart';
+import 'package:little_paper/pages/explore/controller.dart';
 
+import '../../../common/widgets/back_app_bar.dart';
 import '../controller.dart';
-import 'widgets/favorite_api_image.dart';
+import '../../../common/widgets/api_image.dart';
 
 class FavoritePage extends GetView<FavoriteController> {
   const FavoritePage({super.key});
@@ -14,50 +14,36 @@ class FavoritePage extends GetView<FavoriteController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _buildAppBar(),
         body: Obx(
-          () => FutureBuilder(
-              future: controller.state.fetchDataFuture,
-              builder: (context, exploreSnapshot) {
-                // Restore scroll position
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  controller.state.scrollController.jumpTo(
-                    controller.state.scrollPosition,
-                  );
-                });
-
-                return CustomScrollView(
-                    cacheExtent: 3000,
-                    key: const PageStorageKey("exploreImages"),
-                    controller: controller.state.scrollController,
-                    slivers: [
-                      _buildSliverAppBar(),
-                      _buildExploreImages(exploreSnapshot),
-                    ]);
-              }),
-        ));
-  }
-
-  _buildAppBar() {
-    final HomeController homeController = Get.find<HomeController>();
-
-    return AppBar(
-      title: Obx(() {
-        return homeController.state.internetConnection
-            ? const Text("Little Paper")
-            : Text(
-                "Little Paper - OFFLINE",
-                style: TextStyle(
-                  fontSize: 20.sp,
-                ),
+      () => FutureBuilder(
+          future: controller.state.fetchDataFuture,
+          builder: (context, exploreSnapshot) {
+            // Restore scroll position
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              controller.state.scrollController.jumpTo(
+                controller.state.scrollPosition,
               );
-      }),
-      leading: Container(),
-    );
+            });
+
+            return CustomScrollView(
+                cacheExtent: 3000,
+                key: const PageStorageKey("exploreImages"),
+                controller: controller.state.scrollController,
+                slivers: [
+                  _buildSliverAppBar(),
+                  _buildExploreImages(exploreSnapshot),
+                ]);
+          }),
+    ));
   }
 
   _buildSliverAppBar() {
-    return const BackAppBar();
+    return const BackAppBar(
+      title: "Favorite Images",
+      shareFunction: null,
+      imageModel: null,
+      favoriteFunction: null,
+    );
   }
 
   _buildExploreImages(exploreSnapshot) {
@@ -121,8 +107,13 @@ class FavoritePage extends GetView<FavoriteController> {
             () => SliverGrid(
               delegate: SliverChildBuilderDelegate(
                 childCount: controller.state.imagesCountToView,
-                (context, index) =>
-                    FavoriteApiImage(controller.state.favoriteImages[index]),
+                (context, index) => ApiImage(
+                  controller.state.favoriteImages[index],
+                  exploreController: Get.find<ExploreController>(),
+                  favoriteController: controller,
+                  isOpened: false,
+                  isFillImage: false,
+                ),
               ),
               gridDelegate: SliverQuiltedGridDelegate(
                 crossAxisCount: 2,
@@ -138,7 +129,16 @@ class FavoritePage extends GetView<FavoriteController> {
           );
         }
 
-        return SliverToBoxAdapter(child: Container());
+        return SliverToBoxAdapter(
+            child: Center(
+          child: ElevatedButton(
+            onPressed: () => controller.handleReloadData(),
+            child: const Text(
+              "Reload",
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ));
       }),
     );
   }

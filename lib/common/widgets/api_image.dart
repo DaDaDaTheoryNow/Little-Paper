@@ -2,22 +2,29 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:little_paper/models/image.dart';
-import 'package:little_paper/pages/explore/controller.dart';
+import 'package:little_paper/common/models/image.dart';
+import 'package:little_paper/pages/favorite/controller.dart';
 
-import '../../../../common/theme/app_colors.dart';
+import '../theme/app_colors.dart';
+import '../../pages/explore/controller.dart';
 
 class ApiImage extends StatelessWidget {
   final ImageModel imageModel;
+  final ExploreController? exploreController;
+  final FavoriteController? favoriteController;
+  final bool isOpened;
+  final bool isFillImage;
 
-  const ApiImage(this.imageModel, {super.key});
+  const ApiImage(this.imageModel,
+      {required this.exploreController,
+      required this.favoriteController,
+      required this.isOpened,
+      required this.isFillImage,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ExploreController exploreController = Get.find<ExploreController>();
-
     return CachedNetworkImage(
-      repeat: ImageRepeat.repeat,
       imageUrl: imageModel.sampleUrl,
       progressIndicatorBuilder: (context, url, downloadProgress) {
         return Center(
@@ -26,10 +33,19 @@ class ApiImage extends StatelessWidget {
       errorWidget: (context, url, error) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error),
+          const Icon(
+            Icons.error,
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
           ElevatedButton(
               onPressed: () {
-                exploreController.handleReloadData();
+                if (favoriteController != null) {
+                  favoriteController!.handleReloadData();
+                } else if (exploreController != null) {
+                  exploreController!.handleReloadData();
+                }
               },
               child: const Text("Reload",
                   style: TextStyle(
@@ -47,35 +63,57 @@ class ApiImage extends StatelessWidget {
                 image: DecorationImage(
                   scale: 0.8,
                   image: CachedNetworkImageProvider(imageModel.sampleUrl),
-                  fit: BoxFit.cover,
+                  fit: (isFillImage) ? BoxFit.fill : BoxFit.cover,
                 ),
               ),
-              child: InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(13),
-              ),
+              child: (!isOpened)
+                  ? InkWell(
+                      onTap: () => Get.toNamed("/image", arguments: imageModel),
+                      borderRadius: BorderRadius.circular(13),
+                    )
+                  : null,
             ),
           ),
-          Positioned(
-            top: 10.h,
-            right: 5.w,
-            child: IconButton(
-              onPressed: () {
-                exploreController.handleFavoriteButton(imageModel.id);
-              },
-              icon: Obx(() {
-                bool favorite = exploreController.state.exploreImages
-                    .where((element) => element.id == imageModel.id)
-                    .first
-                    .isFavorite;
-                return Icon(
-                  favorite ? Icons.star : Icons.star_border,
-                  color: favorite ? Colors.yellow : AppColors.blue,
-                );
-              }),
-              iconSize: 25.h,
-            ),
-          ),
+          (!isOpened)
+              ? Positioned(
+                  top: 10.h,
+                  right: 5.w,
+                  child: IconButton(
+                    onPressed: () {
+                      if (exploreController != null) {
+                        exploreController!.handleFavoriteButton(imageModel.id);
+                      }
+
+                      if (favoriteController != null) {
+                        favoriteController!.handleFavoriteButton(imageModel.id);
+                      }
+                    },
+                    icon: Obx(() {
+                      bool? favorite;
+
+                      if (favoriteController != null) {
+                        final favoriteImage = favoriteController!
+                            .state.favoriteImages
+                            .firstWhereOrNull(
+                                (element) => element.id == imageModel.id);
+                        favorite = favoriteImage?.isFavorite ?? false;
+                      } else if (exploreController != null) {
+                        final favoriteImage = exploreController!
+                            .state.favoriteImages
+                            .firstWhereOrNull(
+                                (element) => element.id == imageModel.id);
+                        favorite = favoriteImage?.isFavorite ?? false;
+                      }
+
+                      return Icon(
+                        favorite! ? Icons.star : Icons.star_border,
+                        color: favorite ? Colors.yellow : AppColors.blue,
+                      );
+                    }),
+                    iconSize: 25.h,
+                  ),
+                )
+              : Container(),
         ]);
       },
       fadeInDuration: const Duration(milliseconds: 600),

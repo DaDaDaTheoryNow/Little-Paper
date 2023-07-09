@@ -5,9 +5,10 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:little_paper/pages/explore/controller.dart';
-import 'package:little_paper/pages/explore/view/widgets/api_image.dart';
 import 'package:little_paper/pages/explore/view/widgets/tag_app_bar.dart';
 import 'package:little_paper/pages/home/controller.dart';
+
+import '../../../common/widgets/api_image.dart';
 
 class ExplorePage extends GetView<ExploreController> {
   const ExplorePage({super.key});
@@ -168,8 +169,13 @@ class ExplorePage extends GetView<ExploreController> {
             () => SliverGrid(
               delegate: SliverChildBuilderDelegate(
                 childCount: controller.state.imagesCountToView,
-                (context, index) =>
-                    ApiImage(controller.state.exploreImages[index]),
+                (context, index) => ApiImage(
+                  controller.state.exploreImages[index],
+                  favoriteController: null,
+                  exploreController: controller,
+                  isOpened: false,
+                  isFillImage: false,
+                ),
               ),
               gridDelegate: SliverQuiltedGridDelegate(
                 crossAxisCount: 2,

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:little_paper/pages/image/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../common/widgets/bottom_navigation_bar.dart';
 import 'state.dart';
@@ -48,6 +48,7 @@ class HomeController extends GetxController {
   void handleOnPageChanged(index) => state.currentIndex = index;
 
   void handleGoToFavoritePage() {
+    Get.delete<ImageController>();
     Get.toNamed("favorite");
   }
 

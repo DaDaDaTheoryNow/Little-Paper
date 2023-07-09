@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
-import 'package:little_paper/models/image.dart';
-import 'package:little_paper/pages/explore/controller.dart';
-import 'package:little_paper/services/api_service.dart';
-import 'package:little_paper/services/shared_preferences/shared_favorite_image.dart';
 
+import 'package:little_paper/pages/explore/controller.dart';
+
+import '../../common/models/image.dart';
+import '../../common/services/api_service.dart';
+import '../../common/services/shared_preferences/shared_favorite_image.dart';
 import 'state.dart';
 
 class FavoriteController extends GetxController {
