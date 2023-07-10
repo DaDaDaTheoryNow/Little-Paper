@@ -38,7 +38,7 @@ class ExplorePage extends GetView<ExploreController> {
                   key: const PageStorageKey("exploreImages"),
                   controller: controller.state.scrollController,
                   slivers: [
-                    _buildAppBar(),
+                    _buildBackAppBar(),
                     _buildExploreImages(exploreSnapshot),
                     SliverPadding(
                       padding: EdgeInsets.only(bottom: 60.h),
@@ -60,7 +60,7 @@ class ExplorePage extends GetView<ExploreController> {
     ));
   }
 
-  _buildAppBar() {
+  _buildBackAppBar() {
     return TagsAppBar(controller);
   }
 

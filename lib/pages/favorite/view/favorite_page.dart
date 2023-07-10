@@ -30,14 +30,14 @@ class FavoritePage extends GetView<FavoriteController> {
                 key: const PageStorageKey("exploreImages"),
                 controller: controller.state.scrollController,
                 slivers: [
-                  _buildSliverAppBar(),
+                  _buildBackAppBar(),
                   _buildExploreImages(exploreSnapshot),
                 ]);
           }),
     ));
   }
 
-  _buildSliverAppBar() {
+  _buildBackAppBar() {
     return const BackAppBar(
       title: "Favorite Images",
       shareFunction: null,

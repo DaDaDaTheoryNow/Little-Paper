@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
+import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/common/services/parse/parse_tags_to_list.dart';
 import 'package:little_paper/pages/explore/controller.dart';
 import 'package:little_paper/pages/favorite/controller.dart';
-import 'package:little_paper/pages/home/controller.dart';
-
 import 'state.dart';
 
 class ImageController extends GetxController {
@@ -24,11 +23,15 @@ class ImageController extends GetxController {
   }
 
   void changeShowFavorite(bool value) {
-    Get.find<HomeController>().state.showFavorite = value;
+    LittlePaperService.to.changeShowFavorite(value);
   }
 
   void handleShowTags() {
     state.showTags = true;
+  }
+
+  void handleDownloadButton() {
+    Get.toNamed("/wallpaper", arguments: state.imageModel);
   }
 
   @override
@@ -41,13 +44,13 @@ class ImageController extends GetxController {
 
   @override
   void onReady() {
-    changeShowFavorite(false);
+    LittlePaperService.to.changeShowFavorite(false);
     super.onReady();
   }
 
   @override
   void onClose() {
-    changeShowFavorite(true);
+    LittlePaperService.to.changeShowFavorite(true);
     super.onClose();
   }
 }

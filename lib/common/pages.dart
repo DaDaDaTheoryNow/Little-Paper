@@ -3,6 +3,8 @@ import 'package:little_paper/pages/explore/bindings.dart';
 import 'package:little_paper/pages/explore/view/explore_page.dart';
 import 'package:little_paper/pages/favorite/bindings.dart';
 import 'package:little_paper/pages/home/view/home_page.dart';
+import 'package:little_paper/pages/wallpaper/bindings.dart';
+import 'package:little_paper/pages/wallpaper/view/wallpaper_page.dart';
 
 import '../pages/favorite/view/favorite_page.dart';
 import '../pages/home/bindings.dart';
@@ -14,6 +16,7 @@ class AppPages {
   static const favorite = "/favorite";
 
   static const image = "/image";
+  static const wallpaper = "/wallpaper";
 
   static const explore = "/explore";
   static const search = "/search";
@@ -46,6 +49,13 @@ class AppPages {
       name: image,
       page: () => const ImagePage(),
       binding: ImageBinding(),
+    ),
+
+    // wallpaper
+    GetPage(
+      name: wallpaper,
+      page: () => const WallpaperPage(),
+      binding: WallpaperBinding(),
     )
 
     // settings

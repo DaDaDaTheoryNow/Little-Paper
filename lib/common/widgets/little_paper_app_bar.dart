@@ -6,30 +6,33 @@ import 'package:little_paper/pages/home/controller.dart';
 
 import 'favorite_icon_button.dart';
 
-class LittlePaperAppBar extends GetView<HomeController>
-    implements PreferredSizeWidget {
+class LittlePaperAppBar extends StatelessWidget implements PreferredSizeWidget {
   const LittlePaperAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: AppColors.grey,
-      title: Obx(
-        () => controller.state.internetConnection
-            ? const Text("Little Paper")
-            : Text(
-                "Little Paper - OFFLINE",
-                style: TextStyle(
-                  fontSize: 20.sp,
-                ),
-              ),
-      ),
-      actions: [
-        Obx(() => controller.state.showFavorite
-            ? const FavoriteIconButton()
-            : Container()),
-      ],
-      iconTheme: const IconThemeData(color: Colors.white),
+    return GetBuilder<HomeController>(
+      builder: (controller) {
+        return AppBar(
+          backgroundColor: AppColors.grey,
+          title: Obx(
+            () => controller.state.internetConnection
+                ? const Text("Little Paper")
+                : Text(
+                    "Little Paper - OFFLINE",
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                    ),
+                  ),
+          ),
+          actions: [
+            Obx(() => controller.state.showFavorite
+                ? const FavoriteIconButton()
+                : Container()),
+          ],
+          iconTheme: const IconThemeData(color: Colors.white),
+        );
+      },
     );
   }
 

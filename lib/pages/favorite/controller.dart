@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:little_paper/pages/explore/controller.dart';
 
 import '../../common/models/image.dart';
-import '../../common/services/api_service.dart';
+import '../../common/services/api/api_service.dart';
 import '../../common/services/shared_preferences/shared_favorite_image.dart';
 import 'state.dart';
 

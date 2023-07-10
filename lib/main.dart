@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/common/pages.dart';
 import 'package:little_paper/common/widgets/little_paper_app_bar.dart';
 
@@ -13,6 +14,8 @@ void main() {
     statusBarColor: Colors.transparent,
   ));
 
+  Get.put(LittlePaperService());
+  Get.lazyPut(() => HomeController());
   runApp(const MyApp());
 }
 
@@ -52,6 +55,7 @@ class NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      clipBehavior: Clip.none,
       backgroundColor: Colors.white,
       width: 80.w,
       child: Center(

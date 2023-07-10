@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:little_paper/pages/favorite/controller.dart';
 
 import '../../common/models/image.dart';
-import '../../common/services/api_service.dart';
+import '../../common/services/api/api_service.dart';
 import '../../common/services/cache/clear_image_cache.dart';
 import '../../common/services/parse/parse_combined_tags_to_string.dart';
 import '../../common/services/parse/parse_xml_to_models.dart';

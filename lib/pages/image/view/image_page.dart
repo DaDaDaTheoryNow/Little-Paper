@@ -3,16 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/widgets/api_image.dart';
 import 'package:little_paper/common/widgets/back_app_bar.dart';
-import 'package:little_paper/pages/image/view/widgets/download_button.dart';
-import 'package:little_paper/pages/image/view/widgets/show_tags_button.dart';
+import 'package:little_paper/common/widgets/download_button.dart';
+import 'package:little_paper/pages/image/view/widgets/advanced_info.dart';
+import 'package:little_paper/pages/image/view/widgets/tags_in_column.dart';
 
 import '../controller.dart';
-
-TextStyle advancedInfoTextStyle = TextStyle(
-  color: Colors.white,
-  fontWeight: FontWeight.w500,
-  fontSize: 14.sp,
-);
 
 class ImagePage extends GetView<ImageController> {
   const ImagePage({super.key});
@@ -22,7 +17,7 @@ class ImagePage extends GetView<ImageController> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          _buildAppBar(),
+          _buildBackAppBar(),
           SliverToBoxAdapter(
             child: Container(
               margin: EdgeInsets.all(2.r),
@@ -59,8 +54,8 @@ class ImagePage extends GetView<ImageController> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: _buildAdvancedInfo(),
+          const SliverToBoxAdapter(
+            child: AdvancedInfo(),
           ),
           SliverPadding(
             padding: EdgeInsets.only(top: 6.h, bottom: 1.h),
@@ -70,20 +65,23 @@ class ImagePage extends GetView<ImageController> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: _buildTags(context),
+          const SliverToBoxAdapter(
+            child: TagsInColumn(),
           ),
           SliverToBoxAdapter(
             child: SizedBox(height: 60.h),
           )
         ],
       ),
-      floatingActionButton: const DownloadButton(),
+      floatingActionButton: DownloadButton(
+        () => controller.handleDownloadButton(),
+        decoration: false,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  _buildAppBar() {
+  _buildBackAppBar() {
     return BackAppBar(
         title: "id: ${controller.state.imageModel.id}",
         shareFunction: () {},
@@ -173,86 +171,5 @@ class ImagePage extends GetView<ImageController> {
         ],
       ),
     );
-  }
-
-  _buildAdvancedInfo() {
-    return Container(
-      margin: EdgeInsets.only(left: 10.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.check_circle),
-              SizedBox(
-                width: 10.w,
-              ),
-              Text(
-                controller.state.imageModel.status,
-                style: advancedInfoTextStyle,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10.w,
-          ),
-          Row(
-            children: [
-              const Icon(Icons.child_care_rounded),
-              SizedBox(
-                width: 10.w,
-              ),
-              Text(
-                controller.state.imageModel.hasChildren ? "YES" : "NO",
-                style: advancedInfoTextStyle,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10.w,
-          ),
-          Row(
-            children: [
-              const Icon(Icons.date_range),
-              SizedBox(
-                width: 10.w,
-              ),
-              Text(
-                "Created at ${controller.state.imageModel.createdAt}",
-                style: advancedInfoTextStyle,
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  _buildTags(context) {
-    return Obx(() => controller.state.showTags
-        ? SizedBox(
-            height: 150.h,
-            child: GridView.count(
-              scrollDirection: Axis.horizontal,
-              crossAxisCount: 4,
-              childAspectRatio: 0.2.w,
-              crossAxisSpacing: 8.h,
-              mainAxisSpacing: 10.w,
-              shrinkWrap: true,
-              children: List.generate(controller.state.tags.length, (index) {
-                return ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    controller.state.tags[index],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                );
-              }),
-            ),
-          )
-        : ShowTagsButton(() => controller.handleShowTags()));
   }
 }
