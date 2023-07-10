@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:little_paper/common/widgets/api_image.dart';
 import 'package:little_paper/common/widgets/back_app_bar.dart';
 import 'package:little_paper/pages/image/view/widgets/download_button.dart';
+import 'package:little_paper/pages/image/view/widgets/show_tags_button.dart';
 
 import '../controller.dart';
 
@@ -25,7 +26,7 @@ class ImagePage extends GetView<ImageController> {
           SliverToBoxAdapter(
             child: Container(
               margin: EdgeInsets.all(2.r),
-              height: 470.h,
+              height: 325.h,
               child: Obx(
                 () => ApiImage(
                   controller.state.imageModel,
@@ -62,7 +63,7 @@ class ImagePage extends GetView<ImageController> {
             child: _buildAdvancedInfo(),
           ),
           SliverPadding(
-            padding: EdgeInsets.symmetric(vertical: 6.h),
+            padding: EdgeInsets.only(top: 6.h, bottom: 1.h),
             sliver: const SliverToBoxAdapter(
               child: Divider(
                 color: Colors.white,
@@ -70,12 +71,10 @@ class ImagePage extends GetView<ImageController> {
             ),
           ),
           SliverToBoxAdapter(
-            child: Center(
-              child: _buildTags(),
-            ),
+            child: _buildTags(context),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 70.h),
+            child: SizedBox(height: 60.h),
           )
         ],
       ),
@@ -229,10 +228,31 @@ class ImagePage extends GetView<ImageController> {
     );
   }
 
-  _buildTags() {
-    return Text(
-      "tags need",
-      style: advancedInfoTextStyle,
-    );
+  _buildTags(context) {
+    return Obx(() => controller.state.showTags
+        ? SizedBox(
+            height: 150.h,
+            child: GridView.count(
+              scrollDirection: Axis.horizontal,
+              crossAxisCount: 4,
+              childAspectRatio: 0.2.w,
+              crossAxisSpacing: 8.h,
+              mainAxisSpacing: 10.w,
+              shrinkWrap: true,
+              children: List.generate(controller.state.tags.length, (index) {
+                return ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    controller.state.tags[index],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                );
+              }),
+            ),
+          )
+        : ShowTagsButton(() => controller.handleShowTags()));
   }
 }

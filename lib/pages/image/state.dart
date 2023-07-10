@@ -21,4 +21,12 @@ class ImageState {
   final RxBool _isFillImage = false.obs;
   bool get isFillImage => _isFillImage.value;
   set isFillImage(value) => _isFillImage.value = value;
+
+  final RxList<String> _tags = <String>[].obs;
+  List<String> get tags => _tags;
+  set tags(List<String> value) => _tags.value = value;
+
+  final RxBool _showTags = false.obs;
+  bool get showTags => _showTags.value;
+  set showTags(value) => _showTags.value = value;
 }

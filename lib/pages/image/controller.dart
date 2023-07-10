@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:little_paper/common/services/parse/parse_tags_to_list.dart';
 import 'package:little_paper/pages/explore/controller.dart';
 import 'package:little_paper/pages/favorite/controller.dart';
 import 'package:little_paper/pages/home/controller.dart';
@@ -26,9 +27,15 @@ class ImageController extends GetxController {
     Get.find<HomeController>().state.showFavorite = value;
   }
 
+  void handleShowTags() {
+    state.showTags = true;
+  }
+
   @override
   void onInit() {
     state.imageModel = Get.arguments;
+    state.tags = parseTagsToList(state.imageModel.tags);
+
     super.onInit();
   }
 

@@ -13,10 +13,12 @@ class DownloadButton extends StatelessWidget {
       width: 250.w,
       child: ElevatedButton(
           onPressed: () {},
-          child: const Text(
+          child: Text(
             "Download & Set Wallpapers",
             style: TextStyle(
               color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 14.sp,
             ),
           )),
     );
