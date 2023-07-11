@@ -31,7 +31,8 @@ class WallpaperPage extends GetView<WallpaperController> {
               hasScrollBody: false,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: DownloadButton(() {}, decoration: true), // need logic
+                child: DownloadButton(() => controller.handleSetWallpaper(),
+                    decoration: true), // need logic
               ),
             ),
           ],

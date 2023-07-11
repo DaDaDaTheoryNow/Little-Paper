@@ -7,15 +7,16 @@ import 'package:little_paper/pages/explore/controller.dart';
 
 import '../../common/models/image.dart';
 import '../../common/services/api/api_service.dart';
-import '../../common/services/shared_preferences/shared_favorite_image.dart';
+
+import '../../common/services/shared_preferences/shared_favorite_image_service.dart';
 import 'state.dart';
 
 class FavoriteController extends GetxController {
   final state = FavoriteState();
   FavoriteController();
 
-  final SharedFavoriteImage sharedFavoriteImage =
-      SharedFavoriteImage(); // custom class for convenient saving favorite images
+  final SharedFavoriteImageService sharedFavoriteImage =
+      SharedFavoriteImageService(); // custom class for convenient saving favorite images
 
   final ApiService apiService = ApiService();
 

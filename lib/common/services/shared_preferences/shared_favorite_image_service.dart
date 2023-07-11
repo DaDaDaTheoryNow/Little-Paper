@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:little_paper/common/models/image.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedFavoriteImage {
+class SharedFavoriteImageService {
   Future<void> saveFavoriteImage(ImageModel imageModel) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 

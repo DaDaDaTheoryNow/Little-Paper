@@ -10,15 +10,15 @@ import '../../common/services/api/api_service.dart';
 import '../../common/services/cache/clear_image_cache.dart';
 import '../../common/services/parse/parse_combined_tags_to_string.dart';
 import '../../common/services/parse/parse_xml_to_models.dart';
-import '../../common/services/shared_preferences/shared_favorite_image.dart';
+import '../../common/services/shared_preferences/shared_favorite_image_service.dart';
 import 'state.dart';
 
 class ExploreController extends GetxController {
   final state = ExploreState();
   ExploreController();
 
-  final SharedFavoriteImage sharedFavoriteImage =
-      SharedFavoriteImage(); // custom class for convenient saving favorite images
+  final SharedFavoriteImageService sharedFavoriteImage =
+      SharedFavoriteImageService(); // custom class for convenient saving favorite images
 
   final ApiService apiService = ApiService();
 
