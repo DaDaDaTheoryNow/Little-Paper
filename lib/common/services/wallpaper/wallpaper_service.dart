@@ -1,15 +1,16 @@
 import 'dart:io';
 
-import 'package:async_wallpaper/async_wallpaper.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:little_paper/common/services/android_native/android_native_wallpaper.dart';
 import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 class WallpaperService {
-  Dio dio = Dio();
+  final Dio dio = Dio();
   CancelToken cancelToken = CancelToken();
+  final androidNativeWallpaper = AndroidNativeWallpaper();
 
   Future<void> saveWallpaperToGalleryFromUrl(String url) async {
     final Directory tempDict = await getTemporaryDirectory();
@@ -25,9 +26,9 @@ class WallpaperService {
       ImageGallerySaver.saveFile(savePath);
 
       LittlePaperService.to.resetDonwloadWallpaperImageProgress();
+      Get.snackbar("Success", "Image was saved in your gallery!");
     } catch (e) {
-      LittlePaperService.to.resetDonwloadWallpaperImageProgress();
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("Error", "Cancelled");
     }
   }
 
@@ -42,14 +43,12 @@ class WallpaperService {
         LittlePaperService.to.setDonwloadWallpaperImageProgress(percentage);
       }, cancelToken: cancelToken);
 
-      AsyncWallpaper.setWallpaperFromFileNative(
-        filePath: savePath,
-      );
+      // need set wallpaper
+      androidNativeWallpaper.setWallpaper(savePath: savePath);
 
       LittlePaperService.to.resetDonwloadWallpaperImageProgress();
     } catch (e) {
-      LittlePaperService.to.resetDonwloadWallpaperImageProgress();
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("Error", "Cancelled");
     }
   }
 
