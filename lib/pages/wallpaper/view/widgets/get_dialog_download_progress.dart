@@ -5,6 +5,9 @@ import 'package:little_paper/pages/wallpaper/controller.dart';
 
 getWallpaperDialogDownloadProgress({required Function() cancelFunction}) {
   return Get.defaultDialog(
+      onWillPop: () async {
+        return Future.value(false);
+      },
       backgroundColor: Colors.black,
       title: "Download...",
       barrierDismissible: false,
@@ -17,7 +20,7 @@ getWallpaperDialogDownloadProgress({required Function() cancelFunction}) {
         children: [
           GetBuilder<WallpaperController>(builder: (controller) {
             return Obx(
-                () => Text("Progress: ${controller.state.downloadProgress}",
+                () => Text("Progress: ${controller.state.downloadProgress}%",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -26,7 +29,7 @@ getWallpaperDialogDownloadProgress({required Function() cancelFunction}) {
                     )));
           }),
           SizedBox(
-            width: 5.w,
+            width: 10.w,
           ),
           ElevatedButton(
               onPressed: cancelFunction,

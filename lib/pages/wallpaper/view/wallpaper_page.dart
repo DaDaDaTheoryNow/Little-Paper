@@ -32,7 +32,7 @@ class WallpaperPage extends GetView<WallpaperController> {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: DownloadButton(() => controller.handleSetWallpaper(),
-                    decoration: true), // need logic
+                    decoration: true),
               ),
             ),
           ],

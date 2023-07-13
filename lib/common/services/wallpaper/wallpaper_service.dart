@@ -31,7 +31,7 @@ class WallpaperService {
       LittlePaperService.to.resetDonwloadWallpaperImageProgress();
       Get.snackbar("Success", "Image was saved in your gallery!");
     } catch (e) {
-      Get.snackbar("Error", "Cancelled");
+      onError(e);
     }
   }
 
@@ -46,12 +46,21 @@ class WallpaperService {
         LittlePaperService.to.setDonwloadWallpaperImageProgress(percentage);
       }, cancelToken: cancelToken);
 
-      // need set wallpaper
+      // my android native method
       androidNativeWallpaperService.setWallpaper(savePath: savePath);
 
       LittlePaperService.to.resetDonwloadWallpaperImageProgress();
     } catch (e) {
+      onError(e);
+    }
+  }
+
+  void onError(e) {
+    if (e.toString().contains("Request Cancelled")) {
       Get.snackbar("Error", "Cancelled");
+    } else {
+      LittlePaperService.to.resetDonwloadWallpaperImageProgress();
+      Get.snackbar("Error", "$e");
     }
   }
 

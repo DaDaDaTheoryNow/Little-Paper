@@ -4,7 +4,6 @@ import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.opengl.EGL14.eglMakeCurrent
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
@@ -55,14 +54,12 @@ class MainActivity : FlutterActivity() {
 
     private fun setWallpaper(imageUri: String?, context: Context) : Boolean {
         if (imageUri != null) {
-            val fileName = "little_paper_cache_image.jpg"
-
-            val success = copyFileToExternalStorage(sourceLocation = imageUri, fileName = fileName)
+            val success = copyFileToExternalStorage(sourceLocation = imageUri)
 
             if (success) {
                 val storageDir =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                val destLocation = File(storageDir, fileName).path
+                val destLocation = File(storageDir, "little_paper_cache_image.jpg").path
 
                 // setting wallpaper intent
                 // set file for intent
@@ -93,7 +90,9 @@ class MainActivity : FlutterActivity() {
 
     // copy file from cache dir to external storage
     // need for wallpaper manager (fix file not found error)
-    private fun copyFileToExternalStorage(sourceLocation: String?, fileName: String): Boolean {
+    private fun copyFileToExternalStorage(sourceLocation: String): Boolean {
+        val fileName = "little_paper_cache_image.jpg"
+
         return try {
             val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
             if (storageDir != null && storageDir.exists()) {
@@ -108,7 +107,7 @@ class MainActivity : FlutterActivity() {
                 if (source.exists()) {
                     val src: InputStream = FileInputStream(source)
                     val dst: OutputStream = FileOutputStream(destFile)
-                    // Copy the bits from instream to outstream
+                    // Copy the bits from in stream to out stream
                     val buf = ByteArray(1024)
                     var len: Int
                     while (src.read(buf).also { len = it } > 0) {
@@ -138,7 +137,11 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun setPermissionsForWallpaper() {
-        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+        } else {
+            TODO("VERSION.SDK_INT < R")
+        }
         val uri = Uri.fromParts("package", packageName, null)
         intent.data = uri
 

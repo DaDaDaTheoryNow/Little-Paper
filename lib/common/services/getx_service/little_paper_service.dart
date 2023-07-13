@@ -15,7 +15,7 @@ class LittlePaperService extends GetxService {
   }
 
   void resetDonwloadWallpaperImageProgress() {
-    Get.back();
+    Get.close(1);
     Get.find<WallpaperController>().state.downloadProgress = 0;
   }
 }
