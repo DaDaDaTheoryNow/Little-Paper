@@ -10,7 +10,10 @@ import 'package:path_provider/path_provider.dart';
 class WallpaperService {
   final Dio dio = Dio();
   CancelToken cancelToken = CancelToken();
-  final androidNativeWallpaper = AndroidNativeWallpaper();
+
+  // my android native service
+  final AndroidNativeWallpaperService androidNativeWallpaperService =
+      AndroidNativeWallpaperService();
 
   Future<void> saveWallpaperToGalleryFromUrl(String url) async {
     final Directory tempDict = await getTemporaryDirectory();
@@ -44,7 +47,7 @@ class WallpaperService {
       }, cancelToken: cancelToken);
 
       // need set wallpaper
-      androidNativeWallpaper.setWallpaper(savePath: savePath);
+      androidNativeWallpaperService.setWallpaper(savePath: savePath);
 
       LittlePaperService.to.resetDonwloadWallpaperImageProgress();
     } catch (e) {

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AndroidNativeWallpaper {
+class AndroidNativeWallpaperService {
   static const MethodChannel _channel = MethodChannel('wallpaper_channel');
 
   Future<void> setWallpaper({required String savePath}) async {
@@ -12,5 +12,16 @@ class AndroidNativeWallpaper {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  Future<bool> permissionsForWallpaper() async {
+    try {
+      // bool result
+      return await _channel.invokeMethod('permissionsForWallpaper');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    return false;
   }
 }
