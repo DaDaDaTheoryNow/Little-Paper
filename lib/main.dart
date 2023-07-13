@@ -10,6 +10,8 @@ import 'common/theme/theme.dart';
 import 'pages/home/controller.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
