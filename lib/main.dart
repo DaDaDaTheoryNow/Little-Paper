@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
             initialEntries: [
               OverlayEntry(
                 builder: (context) => Scaffold(
+                  drawerEnableOpenDragGesture: false,
                   appBar: const LittlePaperAppBar(),
                   body: child,
                   drawer: const NavigationDrawer(),

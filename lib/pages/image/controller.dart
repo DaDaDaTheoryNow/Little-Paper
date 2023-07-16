@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/common/services/parse/parse_tags_to_list.dart';
-import 'package:little_paper/pages/explore/controller.dart';
 import 'package:little_paper/pages/favorite/controller.dart';
 import 'state.dart';
 
@@ -15,7 +14,7 @@ class ImageController extends GetxController {
       Get.find<FavoriteController>().handleFavoriteButton(state.imageModel.id);
     }
 
-    Get.find<ExploreController>().handleFavoriteButton(state.imageModel.id);
+    LittlePaperService.to.favoriteButton(state.imageModel.id);
   }
 
   void handleChangeImageView(bool value) {

@@ -27,6 +27,7 @@ class ImagePage extends GetView<ImageController> {
                   controller.state.imageModel,
                   exploreController: null,
                   favoriteController: null,
+                  searcherController: null,
                   isOpened: true,
                   isFillImage: controller.state.isFillImage,
                 ),

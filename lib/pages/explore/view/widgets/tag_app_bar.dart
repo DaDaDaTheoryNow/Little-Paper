@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+
 import 'package:little_paper/common/widgets/interactive_app_bar.dart';
 import 'package:little_paper/pages/explore/controller.dart';
-
-import '../../../../common/theme/app_colors.dart';
+import 'package:little_paper/pages/explore/view/widgets/tag_button.dart';
 
 class TagsAppBar extends StatelessWidget {
   final ExploreController exploreController;
@@ -23,38 +21,15 @@ class TagsAppBar extends StatelessWidget {
           child: Row(
             children: List.generate(
               tags.length,
-              (index) => _buildTagButton(
-                  tags[index][0], exploreController, index, context),
+              (index) => TagButton(
+                  tag: tags[index][0],
+                  exploreController: exploreController,
+                  index: index,
+                  context: context),
             ),
           ),
         ),
       ),
     );
-  }
-
-  Widget _buildTagButton(String tag, ExploreController exploreController,
-      int index, BuildContext context) {
-    return Container(
-        margin: EdgeInsets.all(5.w),
-        child: Obx(
-          () => ElevatedButton(
-            onPressed: () {
-              exploreController.handleTagButton(index);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: (exploreController.state.tags[index][1] == true)
-                  ? const Color.fromARGB(255, 8, 52, 128)
-                  : AppColors.grey,
-            ),
-            child: Text(
-              tag,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ));
   }
 }

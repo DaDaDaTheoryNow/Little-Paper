@@ -24,24 +24,21 @@ class BackAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InteractiveAppBar(
-      widget: ClipRRect(
-        borderRadius: BorderRadius.circular(46),
-        child: Row(
-          children: [
-            _buildBackButton(),
-            Expanded(
-              child: Text(
-                textAlign: TextAlign.center,
-                title,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500),
-              ),
+      widget: Row(
+        children: [
+          _buildBackButton(),
+          Expanded(
+            child: Text(
+              textAlign: TextAlign.center,
+              title,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500),
             ),
-            _buildActionButtons(),
-          ],
-        ),
+          ),
+          _buildActionButtons(),
+        ],
       ),
     );
   }

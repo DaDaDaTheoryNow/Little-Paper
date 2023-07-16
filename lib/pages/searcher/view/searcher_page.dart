@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:little_paper/pages/explore/controller.dart';
-import 'package:little_paper/pages/explore/view/widgets/tag_app_bar.dart';
 import 'package:little_paper/pages/home/controller.dart';
+import 'package:little_paper/pages/searcher/view/widgets/searcher_app_bar.dart';
 
 import '../../../common/widgets/api_image.dart';
+import '../controller.dart';
 
-class ExplorePage extends GetView<ExploreController> {
-  const ExplorePage({super.key});
+class SearcherPage extends GetView<SearcherController> {
+  const SearcherPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class ExplorePage extends GetView<ExploreController> {
         body: Obx(
       () => FutureBuilder(
           future: controller.state.fetchDataFuture,
-          builder: (context, exploreSnapshot) {
+          builder: (context, searcherSnapshot) {
             // Restore scroll position
             WidgetsBinding.instance.addPostFrameCallback((_) {
               controller.state.scrollController.jumpTo(
@@ -27,49 +26,59 @@ class ExplorePage extends GetView<ExploreController> {
               );
             });
 
-            return LiquidPullToRefresh(
-              color: const Color.fromARGB(71, 9, 47, 112),
-              showChildOpacityTransition: false,
-              animSpeedFactor: 2,
-              height: 80.h,
-              onRefresh: () => controller.handleReloadData(),
-              child: CustomScrollView(
-                  cacheExtent: 3000,
-                  key: const PageStorageKey("exploreImages"),
-                  controller: controller.state.scrollController,
-                  slivers: [
-                    _buildTagsAppBar(),
-                    _buildExploreImages(exploreSnapshot),
-                    SliverPadding(
-                      padding: EdgeInsets.only(bottom: 60.h),
-                      sliver: SliverToBoxAdapter(
-                        child: Center(
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10.w),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: _buildFetchMoreImages(exploreSnapshot),
-                            ),
-                          ),
+            return CustomScrollView(
+              cacheExtent: 3000,
+              key: const PageStorageKey("searcherImages"),
+              controller: controller.state.scrollController,
+              slivers: [
+                _buildSearcherAppBar(),
+                _buildSearcherImages(searcherSnapshot),
+                SliverPadding(
+                  padding: EdgeInsets.only(bottom: 60.h),
+                  sliver: SliverToBoxAdapter(
+                    child: Center(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: _buildFetchMoreImages(searcherSnapshot),
                         ),
                       ),
                     ),
-                  ]),
+                  ),
+                ),
+              ],
             );
           }),
     ));
   }
 
-  _buildTagsAppBar() {
-    return TagsAppBar(controller);
+  _buildSearcherAppBar() {
+    return const SearcherAppBar();
   }
 
-  _buildExploreImages(exploreSnapshot) {
+  _buildSearcherImages(searcherSnapshot) {
     return Builder(
       builder: ((context) {
-        if (exploreSnapshot.hasError) {
-          if (exploreSnapshot.error is DioException &&
-              exploreSnapshot.error.toString().contains("Request Cancelled")) {
+        if (controller.state.searcherTags.isEmpty) {
+          return SliverPadding(
+              padding: EdgeInsets.only(top: 10.h),
+              sliver: SliverToBoxAdapter(
+                child: Center(
+                    child: Text(
+                  "Search your favorite wallpaper",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.sp,
+                  ),
+                )),
+              ));
+        }
+
+        if (searcherSnapshot.hasError) {
+          if (searcherSnapshot.error is DioException &&
+              searcherSnapshot.error.toString().contains("Request Cancelled")) {
             return SliverToBoxAdapter(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -126,8 +135,8 @@ class ExplorePage extends GetView<ExploreController> {
           }
         }
 
-        if (controller.state.exploreImages.isEmpty &&
-            exploreSnapshot.connectionState == ConnectionState.done) {
+        if (controller.state.searcherImages.isEmpty &&
+            searcherSnapshot.connectionState == ConnectionState.done) {
           return SliverToBoxAdapter(
               child: Center(
                   child: Column(
@@ -154,8 +163,8 @@ class ExplorePage extends GetView<ExploreController> {
           )));
         }
 
-        if (controller.state.exploreImages.isEmpty &&
-            exploreSnapshot.connectionState == ConnectionState.waiting) {
+        if (controller.state.searcherImages.isEmpty &&
+            searcherSnapshot.connectionState == ConnectionState.waiting) {
           return SliverPadding(
               padding: EdgeInsets.only(top: 50.h, bottom: 50.h),
               sliver: const SliverToBoxAdapter(
@@ -163,17 +172,17 @@ class ExplorePage extends GetView<ExploreController> {
               ));
         }
 
-        if (exploreSnapshot.hasData &&
-            exploreSnapshot.connectionState == ConnectionState.done) {
+        if (searcherSnapshot.hasData &&
+            searcherSnapshot.connectionState == ConnectionState.done) {
           return Obx(
             () => SliverGrid(
               delegate: SliverChildBuilderDelegate(
                 childCount: controller.state.imagesCountToView,
                 (context, index) => ApiImage(
-                  controller.state.exploreImages[index],
+                  controller.state.searcherImages[index],
                   favoriteController: null,
-                  exploreController: controller,
-                  searcherController: null,
+                  exploreController: null,
+                  searcherController: controller,
                   isOpened: false,
                   isFillImage: false,
                 ),
@@ -198,11 +207,11 @@ class ExplorePage extends GetView<ExploreController> {
     );
   }
 
-  _buildFetchMoreImages(exploreSnapshot) {
+  _buildFetchMoreImages(searcherSnapshot) {
     return Obx(() {
-      if (controller.state.exploreImages.isNotEmpty &&
+      if (controller.state.searcherImages.isNotEmpty &&
           !controller.state.fetchingMoreImages &&
-          exploreSnapshot.connectionState == ConnectionState.done) {
+          searcherSnapshot.connectionState == ConnectionState.done) {
         return ElevatedButton(
           onPressed: () async {
             final internetConnection =

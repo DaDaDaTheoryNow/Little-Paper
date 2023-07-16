@@ -2,18 +2,16 @@ import 'dart:async';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
-
+import 'package:little_paper/common/services/parse/parse_searcher_tags.dart';
 import '../../common/models/image.dart';
 import '../../common/services/api/api_service.dart';
 import '../../common/services/cache/clear_image_cache.dart';
-import '../../common/services/parse/parse_combined_tags_to_string.dart';
 import '../../common/services/parse/parse_xml_to_models.dart';
 import '../../common/services/shared_preferences/shared_favorite_image_service.dart';
 import 'state.dart';
 
-class ExploreController extends GetxController {
-  final state = ExploreState();
-  ExploreController();
+class SearcherController extends GetxController {
+  final state = SearcherState();
 
   final SharedFavoriteImageService sharedFavoriteImage =
       SharedFavoriteImageService(); // custom class for convenient saving favorite images
@@ -27,19 +25,17 @@ class ExploreController extends GetxController {
   Future<void> handleReloadData() async {
     await manager.emptyCache(); // clear images cache
 
-    // update explore page
+    // update search page
     state.currentPage = 0;
     state.fetchingMoreImages = false;
     state.imagesCountToView = 0;
-    state.exploreImages.clear();
-    state.exploreImagesCache.clear();
+    state.searcherImages.clear();
+    state.searcherImagesCache.clear();
     state.fetchDataFuture = fetchData(state.currentPage);
   }
 
-  void handleTagButton(int index) {
-    List<dynamic> updatedTags = List.from(state.tags);
-    updatedTags[index] = [state.tags[index][0], !state.tags[index][1]];
-    state.tags = updatedTags;
+  void handleSearchImages(String tags) {
+    state.searcherTags = tags;
 
     handleReloadData();
   }
@@ -58,11 +54,11 @@ class ExploreController extends GetxController {
   Future<List<ImageModel>> fetchData(int page) async {
     apiService.cancelFetchingData(); // cancel other request if had
 
-    String parsedCombinedTags = parseCombinedTags(state.tags);
+    final parsedSearcherTags = parseSearcherTags(state.searcherTags);
 
-    // fetch images in explore
+    // fetch images in search
     String xmlResponse =
-        await apiService.fetchData(39, parsedCombinedTags, state.currentPage);
+        await apiService.fetchData(39, parsedSearcherTags, state.currentPage);
 
     // parse response
     final parsedXmlResponse = parseXml(xmlResponse);
@@ -80,19 +76,19 @@ class ExploreController extends GetxController {
     }).toList();
 
     // add images to states
-    state.exploreImages.addAll(List<ImageModel>.from(updatedImages));
-    state.exploreImagesCache.addAll(List<ImageModel>.from(updatedImages));
+    state.searcherImages.addAll(List<ImageModel>.from(updatedImages));
+    state.searcherImagesCache.addAll(List<ImageModel>.from(updatedImages));
 
     // set images count to view
     state.imagesCountToView += 39;
 
-    if (state.exploreImages.length < state.imagesCountToView &&
-        state.exploreImages.isNotEmpty) {
-      state.imagesCountToView = state.exploreImages.length;
+    if (state.searcherImages.length < state.imagesCountToView &&
+        state.searcherImages.isNotEmpty) {
+      state.imagesCountToView = state.searcherImages.length;
       Get.snackbar("Warning", "It's all in current tags");
     }
 
-    return state.exploreImages;
+    return state.searcherImages;
   }
 
   void scrollPositionListener() {
@@ -101,10 +97,10 @@ class ExploreController extends GetxController {
 
   void deleteImagesFromCache() async {
     final deletedCache =
-        await deleteFirstThirdImagesFromCache(state.exploreImagesCache);
+        await deleteFirstThirdImagesFromCache(state.searcherImagesCache);
 
     if (deletedCache != null) {
-      state.exploreImagesCache = deletedCache;
+      state.searcherImagesCache = deletedCache;
     }
   }
 
@@ -112,18 +108,6 @@ class ExploreController extends GetxController {
   void onInit() async {
     state.favoriteImages = await sharedFavoriteImage.getFavoriteImagesList();
 
-    await manager.emptyCache();
-
-    state.tags = [
-      ["1girl", false],
-      ["original", false],
-      ["red_eyes", false],
-      ["genshin_impact", false],
-      ["skirt", false],
-      ["smile", false]
-    ];
-
-    state.fetchDataFuture = fetchData(state.currentPage);
     state.scrollController.addListener(scrollPositionListener);
 
     _timer = Timer.periodic(

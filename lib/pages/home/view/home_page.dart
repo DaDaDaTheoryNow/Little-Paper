@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/widgets/bottom_navigation_bar.dart';
 import 'package:little_paper/pages/home/controller.dart';
+import 'package:little_paper/pages/searcher/view/searcher_page.dart';
 
 import '../../explore/view/explore_page.dart';
 
@@ -25,7 +26,7 @@ class HomePage extends GetView<HomeController> {
       onPageChanged: controller.handleOnPageChanged,
       children: const [
         ExplorePage(),
-        Center(child: Text("Search")),
+        SearcherPage(),
         Center(child: Text("Settings")),
       ],
     );

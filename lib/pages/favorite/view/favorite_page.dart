@@ -111,6 +111,7 @@ class FavoritePage extends GetView<FavoriteController> {
                   controller.state.favoriteImages[index],
                   exploreController: Get.find<ExploreController>(),
                   favoriteController: controller,
+                  searcherController: null,
                   isOpened: false,
                   isFillImage: false,
                 ),

@@ -3,6 +3,8 @@ import 'package:little_paper/pages/explore/bindings.dart';
 import 'package:little_paper/pages/explore/view/explore_page.dart';
 import 'package:little_paper/pages/favorite/bindings.dart';
 import 'package:little_paper/pages/home/view/home_page.dart';
+import 'package:little_paper/pages/searcher/bindings.dart';
+import 'package:little_paper/pages/searcher/view/searcher_page.dart';
 import 'package:little_paper/pages/wallpaper/bindings.dart';
 import 'package:little_paper/pages/wallpaper/view/wallpaper_page.dart';
 
@@ -19,7 +21,7 @@ class AppPages {
   static const wallpaper = "/wallpaper";
 
   static const explore = "/explore";
-  static const search = "/search";
+  static const searcher = "/searcher";
   static const settings = "/add_song";
 
   static final List<GetPage> pages = [
@@ -56,6 +58,13 @@ class AppPages {
       name: wallpaper,
       page: () => const WallpaperPage(),
       binding: WallpaperBinding(),
+    ),
+
+    // search
+    GetPage(
+      name: searcher,
+      page: () => const SearcherPage(),
+      binding: SearcherBinding(),
     )
 
     // settings

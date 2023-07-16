@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/models/image.dart';
+import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/pages/favorite/controller.dart';
+import 'package:little_paper/pages/searcher/controller.dart';
 
 import '../theme/app_colors.dart';
 import '../../pages/explore/controller.dart';
@@ -12,12 +14,14 @@ class ApiImage extends StatelessWidget {
   final ImageModel imageModel;
   final ExploreController? exploreController;
   final FavoriteController? favoriteController;
+  final SearcherController? searcherController;
   final bool isOpened;
   final bool isFillImage;
 
   const ApiImage(this.imageModel,
       {required this.exploreController,
       required this.favoriteController,
+      required this.searcherController,
       required this.isOpened,
       required this.isFillImage,
       super.key});
@@ -45,6 +49,8 @@ class ApiImage extends StatelessWidget {
                   favoriteController!.handleReloadData();
                 } else if (exploreController != null) {
                   exploreController!.handleReloadData();
+                } else if (searcherController != null) {
+                  searcherController!.handleReloadData();
                 }
               },
               child: const Text("Reload",
@@ -81,11 +87,15 @@ class ApiImage extends StatelessWidget {
                   child: IconButton(
                     onPressed: () {
                       if (exploreController != null) {
-                        exploreController!.handleFavoriteButton(imageModel.id);
+                        LittlePaperService.to.favoriteButton(imageModel.id);
                       }
 
                       if (favoriteController != null) {
                         favoriteController!.handleFavoriteButton(imageModel.id);
+                      }
+
+                      if (searcherController != null) {
+                        // need something do
                       }
                     },
                     icon: Obx(() {
@@ -99,6 +109,12 @@ class ApiImage extends StatelessWidget {
                         favorite = favoriteImage?.isFavorite ?? false;
                       } else if (exploreController != null) {
                         final favoriteImage = exploreController!
+                            .state.favoriteImages
+                            .firstWhereOrNull(
+                                (element) => element.id == imageModel.id);
+                        favorite = favoriteImage?.isFavorite ?? false;
+                      } else if (searcherController != null) {
+                        final favoriteImage = searcherController!
                             .state.favoriteImages
                             .firstWhereOrNull(
                                 (element) => element.id == imageModel.id);
