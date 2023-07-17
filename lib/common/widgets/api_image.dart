@@ -74,7 +74,12 @@ class ApiImage extends StatelessWidget {
               ),
               child: (!isOpened)
                   ? InkWell(
-                      onTap: () => Get.toNamed("/image", arguments: imageModel),
+                      onTap: () {
+                        Get.toNamed("/image", arguments: imageModel);
+                        if (searcherController != null) {
+                          LittlePaperService.to.unfocusSearcherAppBar();
+                        }
+                      },
                       borderRadius: BorderRadius.circular(13),
                     )
                   : null,
@@ -86,43 +91,19 @@ class ApiImage extends StatelessWidget {
                   right: 5.w,
                   child: IconButton(
                     onPressed: () {
-                      if (exploreController != null) {
-                        LittlePaperService.to.favoriteButton(imageModel.id);
-                      }
-
-                      if (favoriteController != null) {
-                        favoriteController!.handleFavoriteButton(imageModel.id);
-                      }
-
-                      if (searcherController != null) {
-                        // need something do
-                      }
+                      LittlePaperService.to.favoriteButton(imageModel.id);
                     },
                     icon: Obx(() {
                       bool? favorite;
 
-                      if (favoriteController != null) {
-                        final favoriteImage = favoriteController!
-                            .state.favoriteImages
-                            .firstWhereOrNull(
-                                (element) => element.id == imageModel.id);
-                        favorite = favoriteImage?.isFavorite ?? false;
-                      } else if (exploreController != null) {
-                        final favoriteImage = exploreController!
-                            .state.favoriteImages
-                            .firstWhereOrNull(
-                                (element) => element.id == imageModel.id);
-                        favorite = favoriteImage?.isFavorite ?? false;
-                      } else if (searcherController != null) {
-                        final favoriteImage = searcherController!
-                            .state.favoriteImages
-                            .firstWhereOrNull(
-                                (element) => element.id == imageModel.id);
-                        favorite = favoriteImage?.isFavorite ?? false;
-                      }
+                      final favoriteImage = LittlePaperService
+                          .to.state.favoriteImages
+                          .firstWhereOrNull(
+                              (element) => element.id == imageModel.id);
+                      favorite = favoriteImage?.isFavorite ?? false;
 
                       return Icon(
-                        favorite! ? Icons.star : Icons.star_border,
+                        favorite ? Icons.star : Icons.star_border,
                         color: favorite ? Colors.yellow : AppColors.blue,
                       );
                     }),

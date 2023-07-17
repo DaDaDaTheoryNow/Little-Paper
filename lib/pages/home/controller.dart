@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/pages/image/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -43,6 +44,8 @@ class HomeController extends GetxController {
   void handleOnItemSelected(index) {
     state.currentIndex = index;
     pageController!.jumpToPage(state.currentIndex);
+
+    LittlePaperService.to.unfocusSearcherAppBar();
   }
 
   void handleOnPageChanged(index) => state.currentIndex = index;

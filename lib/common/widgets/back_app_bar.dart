@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/models/image.dart';
 import 'package:little_paper/common/widgets/interactive_app_bar.dart';
-import 'package:little_paper/pages/explore/controller.dart';
 
 import '../../../../common/theme/app_colors.dart';
+import '../services/getx_service/little_paper_service.dart';
 
 class BackAppBar extends StatelessWidget {
   final String title;
@@ -24,6 +24,7 @@ class BackAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InteractiveAppBar(
+      pinned: false,
       widget: Row(
         children: [
           _buildBackButton(),
@@ -121,7 +122,7 @@ class BackAppBar extends StatelessWidget {
                   onPressed: favoriteFunction,
                   icon: Obx(() {
                     final favoriteImages =
-                        Get.find<ExploreController>().state.favoriteImages;
+                        LittlePaperService.to.state.favoriteImages;
 
                     final favoriteImage = favoriteImages.firstWhereOrNull(
                         (element) => element.id == imageModel!.id);

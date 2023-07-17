@@ -18,11 +18,6 @@ class ExploreState {
   List<ImageModel> get exploreImagesCache => _exploreImagesCache;
   set exploreImagesCache(value) => _exploreImagesCache = value;
 
-  // list state for favorite images
-  final RxList<ImageModel> _favoriteImages = <ImageModel>[].obs;
-  List<ImageModel> get favoriteImages => _favoriteImages;
-  set favoriteImages(value) => _favoriteImages.value = value;
-
   // int state for count of images to view
   final RxInt _imagesCountToView = 0.obs;
   int get imagesCountToView => _imagesCountToView.value;

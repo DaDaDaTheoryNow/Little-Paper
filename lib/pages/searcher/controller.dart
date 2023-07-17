@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
+import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/common/services/parse/parse_searcher_tags.dart';
 import '../../common/models/image.dart';
 import '../../common/services/api/api_service.dart';
@@ -23,14 +24,13 @@ class SearcherController extends GetxController {
   Timer? _timer;
 
   Future<void> handleReloadData() async {
-    await manager.emptyCache(); // clear images cache
+    await deleteImagesFromCache(); // clear images cache
 
     // update search page
     state.currentPage = 0;
     state.fetchingMoreImages = false;
     state.imagesCountToView = 0;
     state.searcherImages.clear();
-    state.searcherImagesCache.clear();
     state.fetchDataFuture = fetchData(state.currentPage);
   }
 
@@ -64,13 +64,13 @@ class SearcherController extends GetxController {
     final parsedXmlResponse = parseXml(xmlResponse);
 
     // check to favorite
-    final sharedFavoriteImageList =
+    LittlePaperService.to.state.favoriteImages =
         await sharedFavoriteImage.getFavoriteImagesList();
 
     final updatedImages = parsedXmlResponse.map((image) {
-      final matchingElement = sharedFavoriteImageList.firstWhere(
-          (x) => x.id == image.id,
-          orElse: () => image.copyWith(isFavorite: false));
+      final matchingElement = LittlePaperService.to.state.favoriteImages
+          .firstWhere((x) => x.id == image.id,
+              orElse: () => image.copyWith(isFavorite: false));
 
       return image.copyWith(isFavorite: matchingElement.isFavorite);
     }).toList();
@@ -95,7 +95,7 @@ class SearcherController extends GetxController {
     state.scrollPosition = state.scrollController.position.pixels;
   }
 
-  void deleteImagesFromCache() async {
+  Future<void> deleteImagesFromCache() async {
     final deletedCache =
         await deleteFirstThirdImagesFromCache(state.searcherImagesCache);
 
@@ -106,8 +106,6 @@ class SearcherController extends GetxController {
 
   @override
   void onInit() async {
-    state.favoriteImages = await sharedFavoriteImage.getFavoriteImagesList();
-
     state.scrollController.addListener(scrollPositionListener);
 
     _timer = Timer.periodic(

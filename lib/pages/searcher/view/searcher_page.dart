@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:little_paper/pages/explore/controller.dart';
 import 'package:little_paper/pages/home/controller.dart';
 import 'package:little_paper/pages/searcher/view/widgets/searcher_app_bar.dart';
 
@@ -19,11 +20,13 @@ class SearcherPage extends GetView<SearcherController> {
       () => FutureBuilder(
           future: controller.state.fetchDataFuture,
           builder: (context, searcherSnapshot) {
-            // Restore scroll position
+            // Restore scroll position and text in text field
             WidgetsBinding.instance.addPostFrameCallback((_) {
               controller.state.scrollController.jumpTo(
                 controller.state.scrollPosition,
               );
+              controller.state.textEditingController =
+                  TextEditingController(text: controller.state.searcherTags);
             });
 
             return CustomScrollView(
@@ -181,7 +184,7 @@ class SearcherPage extends GetView<SearcherController> {
                 (context, index) => ApiImage(
                   controller.state.searcherImages[index],
                   favoriteController: null,
-                  exploreController: null,
+                  exploreController: Get.find<ExploreController>(),
                   searcherController: controller,
                   isOpened: false,
                   isFillImage: false,

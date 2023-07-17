@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../common/models/image.dart';
 import '../../common/services/api/api_service.dart';
 import '../../common/services/cache/clear_image_cache.dart';
+import '../../common/services/getx_service/little_paper_service.dart';
 import '../../common/services/parse/parse_combined_tags_to_string.dart';
 import '../../common/services/parse/parse_xml_to_models.dart';
 import '../../common/services/shared_preferences/shared_favorite_image_service.dart';
@@ -25,14 +26,13 @@ class ExploreController extends GetxController {
   Timer? _timer;
 
   Future<void> handleReloadData() async {
-    await manager.emptyCache(); // clear images cache
+    await deleteImagesFromCache(); // clear images cache
 
     // update explore page
     state.currentPage = 0;
     state.fetchingMoreImages = false;
     state.imagesCountToView = 0;
     state.exploreImages.clear();
-    state.exploreImagesCache.clear();
     state.fetchDataFuture = fetchData(state.currentPage);
   }
 
@@ -68,13 +68,13 @@ class ExploreController extends GetxController {
     final parsedXmlResponse = parseXml(xmlResponse);
 
     // check to favorite
-    final sharedFavoriteImageList =
+    LittlePaperService.to.state.favoriteImages =
         await sharedFavoriteImage.getFavoriteImagesList();
 
     final updatedImages = parsedXmlResponse.map((image) {
-      final matchingElement = sharedFavoriteImageList.firstWhere(
-          (x) => x.id == image.id,
-          orElse: () => image.copyWith(isFavorite: false));
+      final matchingElement = LittlePaperService.to.state.favoriteImages
+          .firstWhere((x) => x.id == image.id,
+              orElse: () => image.copyWith(isFavorite: false));
 
       return image.copyWith(isFavorite: matchingElement.isFavorite);
     }).toList();
@@ -99,7 +99,7 @@ class ExploreController extends GetxController {
     state.scrollPosition = state.scrollController.position.pixels;
   }
 
-  void deleteImagesFromCache() async {
+  Future<void> deleteImagesFromCache() async {
     final deletedCache =
         await deleteFirstThirdImagesFromCache(state.exploreImagesCache);
 
@@ -110,8 +110,6 @@ class ExploreController extends GetxController {
 
   @override
   void onInit() async {
-    state.favoriteImages = await sharedFavoriteImage.getFavoriteImagesList();
-
     await manager.emptyCache();
 
     state.tags = [

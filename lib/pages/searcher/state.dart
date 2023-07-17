@@ -19,11 +19,6 @@ class SearcherState {
   List<ImageModel> get searcherImagesCache => _searcherImagesCache;
   set searcherImagesCache(value) => _searcherImagesCache = value;
 
-  // list state for searcher favorite images
-  final RxList<ImageModel> _favoriteImages = <ImageModel>[].obs;
-  List<ImageModel> get favoriteImages => _favoriteImages;
-  set favoriteImages(value) => _favoriteImages.value = value;
-
   // int state for count of images to view
   final RxInt _imagesCountToView = 0.obs;
   int get imagesCountToView => _imagesCountToView.value;
@@ -54,4 +49,16 @@ class SearcherState {
   final RxDouble _scrollPosition = 0.0.obs;
   double get scrollPosition => _scrollPosition.value;
   set scrollPosition(value) => _scrollPosition.value = value;
+
+  // focus node state for searcher app bar
+  FocusNode _focusNode = FocusNode();
+  FocusNode get focusNode => _focusNode;
+  set focusNode(value) => _focusNode = value;
+
+  // text edit controller state for text field
+  final Rx<TextEditingController> _textEditingController =
+      TextEditingController().obs;
+  TextEditingController get textEditingController =>
+      _textEditingController.value;
+  set textEditingController(value) => _textEditingController.value = value;
 }

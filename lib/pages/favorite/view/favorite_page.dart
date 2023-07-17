@@ -27,7 +27,7 @@ class FavoritePage extends GetView<FavoriteController> {
 
             return CustomScrollView(
                 cacheExtent: 3000,
-                key: const PageStorageKey("exploreImages"),
+                key: const PageStorageKey("favoriteImages"),
                 controller: controller.state.scrollController,
                 slivers: [
                   _buildBackAppBar(),

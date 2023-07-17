@@ -47,7 +47,7 @@ dependencies:
   liquid_pull_to_refresh: ^3.0.1
   url_launcher: ^6.1.12
   path_provider: ^2.0.15
-  image_gallery_saver: ^2.0.3 # rewrite with native
+  image_gallery_saver: ^2.0.3
 
 dev_dependencies:
   flutter_test:

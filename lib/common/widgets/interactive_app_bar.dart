@@ -4,8 +4,10 @@ import 'package:little_paper/common/theme/app_colors.dart';
 
 class InteractiveAppBar extends StatelessWidget {
   final Widget widget;
+  final bool pinned;
 
-  const InteractiveAppBar({required this.widget, super.key});
+  const InteractiveAppBar(
+      {required this.widget, required this.pinned, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +15,7 @@ class InteractiveAppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       floating: true,
       snap: true,
+      pinned: pinned,
       toolbarHeight: 41.h,
       backgroundColor: AppColors.opacityGrey,
       flexibleSpace: Padding(

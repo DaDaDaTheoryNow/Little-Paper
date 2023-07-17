@@ -8,6 +8,7 @@ import 'package:little_paper/pages/explore/controller.dart';
 import '../../common/models/image.dart';
 import '../../common/services/api/api_service.dart';
 
+import '../../common/services/getx_service/little_paper_service.dart';
 import '../../common/services/shared_preferences/shared_favorite_image_service.dart';
 import 'state.dart';
 
@@ -32,29 +33,10 @@ class FavoriteController extends GetxController {
     state.fetchDataFuture = fetchData();
   }
 
-  Future<void> handleFavoriteButton(int id) async {
-    List<ImageModel> updatedImages;
-
-    final indexInFavoriteImages =
-        state.favoriteImages.indexWhere((element) => element.id == id);
-
-    if (indexInFavoriteImages != -1) {
-      updatedImages = List.from(state.favoriteImages);
-
-      ImageModel updatedImage = updatedImages[indexInFavoriteImages].copyWith(
-        isFavorite: !updatedImages[indexInFavoriteImages].isFavorite,
-      );
-
-      updatedImages[indexInFavoriteImages] = updatedImage;
-
-      state.favoriteImages = updatedImages; // update favorite button
-    }
-  }
-
   Future<List<ImageModel>> fetchData() async {
     apiService.cancelFetchingData(); // cancel other request if we had
 
-    state.favoriteImages = exploreController.state.favoriteImages;
+    state.favoriteImages = LittlePaperService.to.state.favoriteImages;
 
     // set images count to view
     state.imagesCountToView = state.favoriteImages.length;

@@ -14,6 +14,7 @@ class TagsAppBar extends StatelessWidget {
     final tags = exploreController.state.tags;
 
     return InteractiveAppBar(
+      pinned: false,
       widget: ClipRRect(
         borderRadius: BorderRadius.circular(46),
         child: SingleChildScrollView(
