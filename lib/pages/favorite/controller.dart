@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 
@@ -26,16 +24,13 @@ class FavoriteController extends GetxController {
   final ExploreController exploreController = Get.find<ExploreController>();
 
   void handleReloadData() async {
-    await manager.emptyCache(); // clear images cache
-
     // update favorite page
     state.imagesCountToView = 0;
-    state.fetchDataFuture = fetchData();
+    state.favoriteImagesFuture = fetchData();
   }
 
   Future<List<ImageModel>> fetchData() async {
-    apiService.cancelFetchingData(); // cancel other request if we had
-
+    await LittlePaperService.to.updateFavoriteImages();
     state.favoriteImages = LittlePaperService.to.state.favoriteImages;
 
     // set images count to view
@@ -44,15 +39,9 @@ class FavoriteController extends GetxController {
     return state.favoriteImages;
   }
 
-  void scrollPositionListener() {
-    state.scrollPosition = state.scrollController.position.pixels;
-  }
-
   @override
   void onInit() async {
-    state.fetchDataFuture = fetchData();
-    state.scrollController.addListener(scrollPositionListener);
-
+    state.favoriteImagesFuture = fetchData();
     super.onInit();
   }
 }

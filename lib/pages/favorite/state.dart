@@ -13,19 +13,16 @@ class FavoriteState {
   int get imagesCountToView => _imagesCountToView.value;
   set imagesCountToView(value) => _imagesCountToView.value = value;
 
-  // future state for future builder (fixes futurebuilder rebuild)
-  final Rx<Future<List<ImageModel>>> _fetchDataFuture =
+  // future state for future builder
+  final Rx<Future<List<ImageModel>>> _favoriteImagesFuture =
       Rx<Future<List<ImageModel>>>(Future.value([]));
-  Future<List<ImageModel>> get fetchDataFuture => _fetchDataFuture.value;
-  set fetchDataFuture(Future<List<ImageModel>> value) =>
-      _fetchDataFuture.value = value;
+  Future<List<ImageModel>> get favoriteImagesFuture =>
+      _favoriteImagesFuture.value;
+  set favoriteImagesFuture(Future<List<ImageModel>> value) =>
+      _favoriteImagesFuture.value = value;
 
   // states for save current scroll position
   ScrollController _scrollController = ScrollController();
   ScrollController get scrollController => _scrollController;
   set scrollController(value) => _scrollController = value;
-
-  final RxDouble _scrollPosition = 0.0.obs;
-  double get scrollPosition => _scrollPosition.value;
-  set scrollPosition(value) => _scrollPosition.value = value;
 }

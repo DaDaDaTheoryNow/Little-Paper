@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NothingToView extends StatelessWidget {
+  final String title;
   final Function() reloadFunction;
-  const NothingToView({required this.reloadFunction, super.key});
+  const NothingToView(
+      {required this.title, required this.reloadFunction, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +13,8 @@ class NothingToView extends StatelessWidget {
         child: Column(
       children: [
         Text(
-          "Nothing To View, try other tags",
+          title,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:little_paper/pages/wallpaper/controller.dart';
+import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 
 getWallpaperDialogDownloadProgress({required Function() cancelFunction}) {
   return Get.defaultDialog(
@@ -18,16 +18,17 @@ getWallpaperDialogDownloadProgress({required Function() cancelFunction}) {
       content: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          GetBuilder<WallpaperController>(builder: (controller) {
-            return Obx(
-                () => Text("Progress: ${controller.state.downloadProgress}%",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w500,
-                    )));
-          }),
+          Obx(
+            () => Text(
+              "Progress: ${LittlePaperService.to.state.downloadProgress}%",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
           SizedBox(
             width: 10.w,
           ),

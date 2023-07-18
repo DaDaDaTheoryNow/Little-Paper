@@ -3,20 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/models/image.dart';
 import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
-import 'package:little_paper/pages/explore/controller.dart';
+import 'package:little_paper/pages/searcher/controller.dart';
 
-class FetchMoreExploreImages extends StatelessWidget {
-  final AsyncSnapshot<List<ImageModel>> exploreImagesSnapshot;
-  const FetchMoreExploreImages(
-      {required this.exploreImagesSnapshot, super.key});
+class FetchMoreSearcherImages extends StatelessWidget {
+  final AsyncSnapshot<List<ImageModel>> searcherImagesSnapshot;
+  const FetchMoreSearcherImages(
+      {required this.searcherImagesSnapshot, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ExploreController>(
+    return GetBuilder<SearcherController>(
       builder: (controller) => Obx(() {
-        if (controller.state.exploreImages.isNotEmpty &&
+        if (controller.state.searcherImages.isNotEmpty &&
             !controller.state.fetchingMoreImages &&
-            exploreImagesSnapshot.connectionState == ConnectionState.done) {
+            searcherImagesSnapshot.connectionState == ConnectionState.done) {
           return Center(
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 10.w),

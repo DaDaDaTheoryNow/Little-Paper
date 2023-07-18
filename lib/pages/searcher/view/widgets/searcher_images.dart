@@ -1,0 +1,114 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get.dart';
+import 'package:little_paper/common/models/image.dart';
+import 'package:little_paper/common/widgets/check_internet_connection.dart';
+import 'package:little_paper/common/widgets/hurry_warning.dart';
+import 'package:little_paper/common/widgets/nothing_to_view.dart';
+import 'package:little_paper/pages/searcher/controller.dart';
+
+import '../../../../common/widgets/api_image.dart';
+
+class SearcherImages extends StatelessWidget {
+  final AsyncSnapshot<List<ImageModel>> searcherImagesSnapshot;
+  const SearcherImages({required this.searcherImagesSnapshot, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<SearcherController>(
+      builder: ((controller) {
+        if (controller.state.searcherTags.isEmpty) {
+          return SliverPadding(
+              padding: EdgeInsets.only(top: 10.h),
+              sliver: SliverToBoxAdapter(
+                child: Center(
+                    child: Text(
+                  "Search your favorite wallpaper",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.sp,
+                  ),
+                )),
+              ));
+        }
+
+        if (searcherImagesSnapshot.hasError) {
+          if (searcherImagesSnapshot.error is DioException &&
+              searcherImagesSnapshot.error
+                  .toString()
+                  .contains("Request Cancelled")) {
+            return const SliverToBoxAdapter(child: HurryWarning());
+          } else {
+            return SliverToBoxAdapter(
+              child: CheckInternetConnection(
+                reloadFunction: () => controller.handleReloadData(),
+              ),
+            );
+          }
+        }
+
+        if (controller.state.searcherImages.isEmpty &&
+            searcherImagesSnapshot.connectionState == ConnectionState.done) {
+          return SliverToBoxAdapter(
+            child: NothingToView(
+              title: "Nothing To View, try other tags",
+              reloadFunction: () => controller.handleReloadData(),
+            ),
+          );
+        }
+
+        if (controller.state.searcherImages.isEmpty &&
+            searcherImagesSnapshot.connectionState == ConnectionState.waiting) {
+          return SliverToBoxAdapter(
+            child: _buildLoading(),
+          );
+        }
+
+        if (searcherImagesSnapshot.hasData &&
+            searcherImagesSnapshot.connectionState == ConnectionState.done) {
+          return _buildSearcherImages(controller);
+        }
+
+        return SliverToBoxAdapter(child: Container());
+      }),
+    );
+  }
+
+  _buildLoading() {
+    return Container(
+        margin: EdgeInsets.only(top: 50.h, bottom: 50.h),
+        child: const Center(child: CircularProgressIndicator()));
+  }
+
+  _buildSearcherImages(SearcherController controller) {
+    return Obx(
+      () => SliverGrid(
+        delegate: SliverChildBuilderDelegate(
+          childCount: controller.state.imagesCountToView,
+          (context, index) => ApiImage(
+            controller.state.searcherImages[index],
+            favoriteController: null,
+            exploreController: null,
+            searcherController: controller,
+            isOpened: false,
+            isFillImage: false,
+          ),
+        ),
+        gridDelegate: SliverQuiltedGridDelegate(
+          crossAxisCount: 2,
+          mainAxisSpacing: 4,
+          crossAxisSpacing: 4,
+          repeatPattern: QuiltedGridRepeatPattern.inverted,
+          pattern: const [
+            QuiltedGridTile(2, 1),
+            QuiltedGridTile(1, 1),
+            QuiltedGridTile(1, 1),
+          ],
+        ),
+      ),
+    );
+  }
+}

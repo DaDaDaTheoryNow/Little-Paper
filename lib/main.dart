@@ -9,7 +9,7 @@ import 'package:little_paper/common/widgets/little_paper_app_bar.dart';
 import 'common/theme/theme.dart';
 import 'pages/home/controller.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -17,7 +17,10 @@ void main() {
   ));
 
   Get.put(LittlePaperService());
+  await LittlePaperService.to.updateFavoriteImages();
+
   Get.lazyPut(() => HomeController());
+
   runApp(const MyApp());
 }
 

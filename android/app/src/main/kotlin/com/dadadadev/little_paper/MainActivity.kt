@@ -1,6 +1,7 @@
 package com.dadadadev.little_paper
 
 import android.app.WallpaperManager
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -45,6 +46,15 @@ class MainActivity : FlutterActivity() {
                         result.success(false)
                     }
                 }
+                "shareWallpaper" -> {
+                    val imageUri = call.argument<String>("imageUri")
+                    val success = shareWallpaper(imageUri = imageUri, context = this)
+                    if (success) {
+                        result.success(true)
+                    } else {
+                        result.error("ERROR", "Failed to set wallpaper", null)
+                    }
+                }
                 else -> {
                     result.notImplemented()
                 }
@@ -75,6 +85,44 @@ class MainActivity : FlutterActivity() {
 
                 return try {
                     startActivity(wallpaperIntent)
+                    true
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    false
+                }
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+
+    private fun shareWallpaper(imageUri: String?, context: Context) : Boolean {
+        if (imageUri != null) {
+            val success = copyFileToExternalStorage(sourceLocation = imageUri)
+            if (success) {
+                val storageDir =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                val destLocation = File(storageDir, "little_paper_cache_image.jpg").path
+
+                // setting share intent
+                // set file for intent
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                val externalImageUri = FileProvider.getUriForFile(
+                    context,
+                    context.applicationContext.packageName + ".provider",
+                    File(destLocation),
+                )
+                shareIntent.type = "image/"
+                shareIntent.putExtra(Intent.EXTRA_STREAM, externalImageUri)
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                shareIntent.clipData = ClipData.newRawUri("", externalImageUri)
+
+                val chooserIntent = Intent.createChooser(shareIntent, "Share Image")
+
+                return try {
+                    startActivity(chooserIntent)
                     true
                 } catch (e: Exception) {
                     e.printStackTrace()

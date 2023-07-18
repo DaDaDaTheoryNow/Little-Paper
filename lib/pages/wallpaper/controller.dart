@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:little_paper/common/services/wallpaper/wallpaper_service.dart';
 import 'package:little_paper/pages/wallpaper/state.dart';
 import 'package:little_paper/pages/wallpaper/view/widgets/get_dialog_choice.dart';
-import 'package:little_paper/pages/wallpaper/view/widgets/get_dialog_download_progress.dart';
+import 'package:little_paper/common/widgets/get_dialog_download_progress.dart';
 import 'package:little_paper/common/services/android_native/android_native_wallpaper.dart';
 
 class WallpaperController extends GetxController {

@@ -16,8 +16,8 @@ class ExplorePage extends GetView<ExploreController> {
     return Scaffold(
         body: Obx(
       () => FutureBuilder(
-          future: controller.state.fetchDataFuture,
-          builder: (context, exploreSnapshot) {
+          future: controller.state.exploreImagesFuture,
+          builder: (context, exploreImagesSnapshot) {
             // Restore scroll position
             WidgetsBinding.instance.addPostFrameCallback((_) {
               controller.state.scrollController.jumpTo(
@@ -38,13 +38,13 @@ class ExplorePage extends GetView<ExploreController> {
                   slivers: [
                     _buildTagsAppBar(),
                     ExploreImages(
-                      exploreSnapshot: exploreSnapshot,
+                      exploreImagesSnapshot: exploreImagesSnapshot,
                     ),
                     SliverPadding(
                       padding: EdgeInsets.only(bottom: 60.h),
                       sliver: SliverToBoxAdapter(
                         child: FetchMoreExploreImages(
-                            exploreSnapshot: exploreSnapshot),
+                            exploreImagesSnapshot: exploreImagesSnapshot),
                       ),
                     ),
                   ]),

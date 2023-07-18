@@ -24,4 +24,12 @@ class AndroidNativeWallpaperService {
 
     return false;
   }
+
+  Future<void> shareWallpaper({required String savePath}) async {
+    try {
+      await _channel.invokeMethod('shareWallpaper', {'imageUri': savePath});
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }

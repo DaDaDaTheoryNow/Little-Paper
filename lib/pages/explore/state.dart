@@ -33,12 +33,13 @@ class ExploreState {
   bool get fetchingMoreImages => _fetchingMoreImages.value;
   set fetchingMoreImages(value) => _fetchingMoreImages.value = value;
 
-  // future state for future builder (fixes futurebuilder rebuild)
-  final Rx<Future<List<ImageModel>>> _fetchDataFuture =
+  // future state for future builder
+  final Rx<Future<List<ImageModel>>> _exploreImagesFuture =
       Rx<Future<List<ImageModel>>>(Future.value([]));
-  Future<List<ImageModel>> get fetchDataFuture => _fetchDataFuture.value;
-  set fetchDataFuture(Future<List<ImageModel>> value) =>
-      _fetchDataFuture.value = value;
+  Future<List<ImageModel>> get exploreImagesFuture =>
+      _exploreImagesFuture.value;
+  set exploreImagesFuture(Future<List<ImageModel>> value) =>
+      _exploreImagesFuture.value = value;
 
   // states for save current scroll position
   ScrollController _scrollController = ScrollController();

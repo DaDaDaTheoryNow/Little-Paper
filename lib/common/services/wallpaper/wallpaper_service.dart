@@ -55,6 +55,26 @@ class WallpaperService {
     }
   }
 
+  Future<void> shareWallpaperFromUrl(String url) async {
+    final Directory tempDict = await getTemporaryDirectory();
+    final uri = Uri.parse(url);
+    String savePath = "${tempDict.path}/${uri.pathSegments[2]}";
+
+    try {
+      await dio.download(url, savePath, onReceiveProgress: (received, total) {
+        int percentage = ((received / total) * 100).floor();
+        LittlePaperService.to.setDonwloadWallpaperImageProgress(percentage);
+      }, cancelToken: cancelToken);
+
+      // my android native method
+      androidNativeWallpaperService.shareWallpaper(savePath: savePath);
+
+      LittlePaperService.to.resetDonwloadWallpaperImageProgress();
+    } catch (e) {
+      onError(e);
+    }
+  }
+
   void onError(e) {
     if (e.toString().contains("Request Cancelled")) {
       Get.snackbar("Error", "Cancelled");

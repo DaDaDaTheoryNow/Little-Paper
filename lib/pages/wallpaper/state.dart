@@ -18,8 +18,4 @@ class WallpaperState {
       .obs;
   ImageModel get imageModel => _imageModel.value;
   set imageModel(ImageModel value) => _imageModel.value = value;
-
-  final RxInt _downloadProgress = 0.obs;
-  int get downloadProgress => _downloadProgress.value;
-  set downloadProgress(value) => _downloadProgress.value = value;
 }

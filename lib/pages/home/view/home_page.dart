@@ -24,10 +24,17 @@ class HomePage extends GetView<HomeController> {
       physics: const NeverScrollableScrollPhysics(),
       controller: controller.pageController,
       onPageChanged: controller.handleOnPageChanged,
-      children: const [
-        ExplorePage(),
-        SearcherPage(),
-        Center(child: Text("Settings")),
+      children: [
+        const ExplorePage(),
+        const SearcherPage(),
+        Center(
+            child: Text(
+          "Settings - in progress...",
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.w500),
+        )),
       ],
     );
   }

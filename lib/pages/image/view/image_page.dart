@@ -5,6 +5,8 @@ import 'package:little_paper/common/widgets/api_image.dart';
 import 'package:little_paper/common/widgets/back_app_bar.dart';
 import 'package:little_paper/common/widgets/download_button.dart';
 import 'package:little_paper/pages/image/view/widgets/advanced_info.dart';
+import 'package:little_paper/pages/image/view/widgets/ratings.dart';
+import 'package:little_paper/pages/image/view/widgets/score.dart';
 import 'package:little_paper/pages/image/view/widgets/tags_in_column.dart';
 
 import '../controller.dart';
@@ -40,15 +42,17 @@ class ImagePage extends GetView<ImageController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildScore(),
-                  _buildRating(),
+                  Score(controller.state.imageModel.score),
+                  Rating(controller.state.imageModel.rating),
                   _buildFillViewSwitch(),
                 ],
               ),
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.symmetric(vertical: 6.h),
+            padding: EdgeInsets.symmetric(
+              vertical: 6.h,
+            ),
             sliver: const SliverToBoxAdapter(
               child: Divider(
                 color: Colors.white,
@@ -59,7 +63,7 @@ class ImagePage extends GetView<ImageController> {
             child: AdvancedInfo(),
           ),
           SliverPadding(
-            padding: EdgeInsets.only(top: 6.h, bottom: 1.h),
+            padding: EdgeInsets.only(top: 6.h),
             sliver: const SliverToBoxAdapter(
               child: Divider(
                 color: Colors.white,
@@ -85,65 +89,9 @@ class ImagePage extends GetView<ImageController> {
   _buildBackAppBar() {
     return BackAppBar(
         title: "id: ${controller.state.imageModel.id}",
-        shareFunction: () {},
+        shareFunction: () => controller.handleShareButton(),
         imageModel: controller.state.imageModel,
         favoriteFunction: () => controller.handleFavoriteButton());
-  }
-
-  _buildScore() {
-    return Container(
-        height: 30.h,
-        width: 70.w,
-        decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(46)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.favorite,
-              color: Colors.red,
-              size: 18.sp,
-            ),
-            SizedBox(
-              width: 10.w,
-            ),
-            Text(
-              controller.state.imageModel.score.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w500),
-            ),
-          ],
-        ));
-  }
-
-  _buildRating() {
-    return Container(
-        height: 30.h,
-        width: 70.w,
-        decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(46)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Rating - ",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500),
-            ),
-            Text(
-              controller.state.imageModel.rating,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ));
   }
 
   _buildFillViewSwitch() {

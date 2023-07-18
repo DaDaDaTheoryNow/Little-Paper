@@ -33,7 +33,7 @@ class ExploreController extends GetxController {
     state.fetchingMoreImages = false;
     state.imagesCountToView = 0;
     state.exploreImages.clear();
-    state.fetchDataFuture = fetchData(state.currentPage);
+    state.exploreImagesFuture = fetchData(state.currentPage);
   }
 
   void handleTagButton(int index) {
@@ -68,8 +68,7 @@ class ExploreController extends GetxController {
     final parsedXmlResponse = parseXml(xmlResponse);
 
     // check to favorite
-    LittlePaperService.to.state.favoriteImages =
-        await sharedFavoriteImage.getFavoriteImagesList();
+    await LittlePaperService.to.updateFavoriteImages();
 
     final updatedImages = parsedXmlResponse.map((image) {
       final matchingElement = LittlePaperService.to.state.favoriteImages
@@ -121,7 +120,7 @@ class ExploreController extends GetxController {
       ["smile", false]
     ];
 
-    state.fetchDataFuture = fetchData(state.currentPage);
+    state.exploreImagesFuture = fetchData(state.currentPage);
     state.scrollController.addListener(scrollPositionListener);
 
     _timer = Timer.periodic(

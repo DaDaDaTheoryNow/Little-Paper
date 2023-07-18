@@ -64,8 +64,7 @@ class SearcherController extends GetxController {
     final parsedXmlResponse = parseXml(xmlResponse);
 
     // check to favorite
-    LittlePaperService.to.state.favoriteImages =
-        await sharedFavoriteImage.getFavoriteImagesList();
+    await LittlePaperService.to.updateFavoriteImages();
 
     final updatedImages = parsedXmlResponse.map((image) {
       final matchingElement = LittlePaperService.to.state.favoriteImages
