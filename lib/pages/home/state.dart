@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class HomeState {
@@ -12,4 +13,8 @@ class HomeState {
   final RxBool _showFavorite = true.obs;
   bool get showFavorite => _showFavorite.value;
   set showFavorite(bool value) => _showFavorite.value = value;
+
+  PageController _pageController = PageController();
+  PageController get pageController => _pageController;
+  set pageController(value) => _pageController = value;
 }

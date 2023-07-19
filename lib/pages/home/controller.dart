@@ -15,7 +15,6 @@ class HomeController extends GetxController {
   HomeController();
 
   StreamSubscription? subscription;
-  PageController? pageController;
   List<BottomNavyBarItem> bottomNavigationBarItems = [
     BottomNavyBarItem(
       icon: const Icon(
@@ -43,7 +42,7 @@ class HomeController extends GetxController {
 
   void handleOnItemSelected(index) {
     state.currentIndex = index;
-    pageController!.jumpToPage(state.currentIndex);
+    state.pageController.jumpToPage(state.currentIndex);
 
     LittlePaperService.to.unfocusSearcherAppBar();
   }
@@ -65,7 +64,6 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    pageController = PageController();
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
@@ -77,13 +75,5 @@ class HomeController extends GetxController {
     });
 
     super.onInit();
-  }
-
-  @override
-  void onClose() {
-    pageController!.dispose();
-    subscription!.cancel();
-
-    super.onClose();
   }
 }

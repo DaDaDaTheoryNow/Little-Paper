@@ -19,7 +19,7 @@ void main() async {
   Get.put(LittlePaperService());
   await LittlePaperService.to.updateFavoriteImages();
 
-  Get.lazyPut(() => HomeController());
+  Get.put(() => HomeController());
 
   runApp(const MyApp());
 }

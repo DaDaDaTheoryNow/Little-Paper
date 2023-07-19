@@ -7,7 +7,7 @@ import 'package:little_paper/common/widgets/download_button.dart';
 import 'package:little_paper/pages/image/view/widgets/advanced_info.dart';
 import 'package:little_paper/pages/image/view/widgets/ratings.dart';
 import 'package:little_paper/pages/image/view/widgets/score.dart';
-import 'package:little_paper/pages/image/view/widgets/tags_in_column.dart';
+import 'package:little_paper/pages/image/view/widgets/tags_in_row.dart';
 
 import '../controller.dart';
 
@@ -70,8 +70,8 @@ class ImagePage extends GetView<ImageController> {
               ),
             ),
           ),
-          const SliverToBoxAdapter(
-            child: TagsInColumn(),
+          SliverToBoxAdapter(
+            child: TagsInRow((tag) => controller.handleTagButton(tag)),
           ),
           SliverToBoxAdapter(
             child: SizedBox(height: 60.h),

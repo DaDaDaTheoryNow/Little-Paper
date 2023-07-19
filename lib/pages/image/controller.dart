@@ -43,6 +43,10 @@ class ImageController extends GetxController {
     state.showTags = true;
   }
 
+  void handleTagButton(String tag) {
+    LittlePaperService.to.tagButton(tag);
+  }
+
   void handleDownloadButton() {
     Get.toNamed("/wallpaper", arguments: state.imageModel);
   }

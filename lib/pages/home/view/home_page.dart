@@ -22,7 +22,7 @@ class HomePage extends GetView<HomeController> {
   PageView _buildPageView() {
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
-      controller: controller.pageController,
+      controller: controller.state.pageController,
       onPageChanged: controller.handleOnPageChanged,
       children: [
         const ExplorePage(),

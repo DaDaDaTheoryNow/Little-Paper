@@ -13,8 +13,6 @@ class SearcherAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? tags;
-
     return GetBuilder<SearcherController>(
       builder: (controller) => InteractiveAppBar(
         pinned: true,
@@ -30,7 +28,6 @@ class SearcherAppBar extends StatelessWidget {
                   controller.handleSearchImages(value);
                   LittlePaperService.to.unfocusSearcherAppBar();
                 },
-                onChanged: (value) => tags = value,
                 textAlign: TextAlign.start,
                 cursorColor: AppColors.blue,
                 style: TextStyle(
@@ -65,7 +62,8 @@ class SearcherAppBar extends StatelessWidget {
               ),
             )),
             GoButton(() {
-              controller.handleSearchImages(tags ?? "");
+              controller.handleSearchImages(
+                  controller.state.textEditingController.text);
               LittlePaperService.to.unfocusSearcherAppBar();
             }),
           ],

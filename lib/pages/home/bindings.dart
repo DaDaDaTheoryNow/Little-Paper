@@ -6,8 +6,8 @@ import 'package:little_paper/pages/searcher/controller.dart';
 class HomeBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HomeController>(() => HomeController());
-    Get.lazyPut<ExploreController>(() => ExploreController());
-    Get.lazyPut<SearcherController>(() => SearcherController());
+    Get.put<HomeController>(HomeController());
+    Get.put<ExploreController>(ExploreController());
+    Get.put<SearcherController>(SearcherController());
   }
 }

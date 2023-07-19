@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
@@ -101,6 +102,15 @@ class SearcherController extends GetxController {
     if (deletedCache != null) {
       state.searcherImagesCache = deletedCache;
     }
+  }
+
+  void putTagFromImageToTextField(String tag) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        state.textEditingController.text = tag;
+        handleSearchImages(tag); // search images with this tag
+      });
+    });
   }
 
   @override

@@ -39,4 +39,15 @@ class LittlePaperService extends GetxService {
 
   Future<void> favoriteButton(int id) async =>
       await FavoriteService().favoriteButton(id);
+
+  void tagButton(String tag) {
+    Get.close(1); // close image page
+
+    final homeController = Get.find<HomeController>();
+    final searcherController = Get.find<SearcherController>();
+
+    homeController.state.pageController.jumpToPage(1); // jump to searcher page
+
+    searcherController.putTagFromImageToTextField(tag); // put tag in textField
+  }
 }

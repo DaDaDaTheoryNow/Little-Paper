@@ -5,8 +5,9 @@ import 'package:little_paper/pages/image/controller.dart';
 
 import 'show_tags_button.dart';
 
-class TagsInColumn extends StatelessWidget {
-  const TagsInColumn({super.key});
+class TagsInRow extends StatelessWidget {
+  final Function(String tag) tagButtonFunction;
+  const TagsInRow(this.tagButtonFunction, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,8 @@ class TagsInColumn extends StatelessWidget {
                   children:
                       List.generate(controller.state.tags.length, (index) {
                     return ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () =>
+                          tagButtonFunction(controller.state.tags[index]),
                       child: Text(
                         controller.state.tags[index],
                         textAlign: TextAlign.center,
