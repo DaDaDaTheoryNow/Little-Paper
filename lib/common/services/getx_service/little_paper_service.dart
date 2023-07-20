@@ -4,6 +4,7 @@ import 'package:little_paper/common/services/getx_service/state.dart';
 
 import 'package:little_paper/pages/searcher/controller.dart';
 
+import '../../../pages/favorite/controller.dart';
 import '../../../pages/home/controller.dart';
 
 class LittlePaperService extends GetxService {
@@ -41,7 +42,11 @@ class LittlePaperService extends GetxService {
       await FavoriteService().favoriteButton(id);
 
   void tagButton(String tag) {
-    Get.close(1); // close image page
+    if (Get.isRegistered<FavoriteController>()) {
+      Get.close(2); // close image page from favorites
+    } else {
+      Get.close(1); // close image page
+    }
 
     final homeController = Get.find<HomeController>();
     final searcherController = Get.find<SearcherController>();

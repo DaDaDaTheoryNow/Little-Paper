@@ -78,6 +78,9 @@ class WallpaperService {
   void onError(e) {
     if (e.toString().contains("Request Cancelled")) {
       Get.snackbar("Error", "Cancelled");
+    } else if (e.toString().contains("Failed host lookup")) {
+      LittlePaperService.to.resetDonwloadWallpaperImageProgress();
+      Get.snackbar("Error", "Check your internet connection");
     } else {
       LittlePaperService.to.resetDonwloadWallpaperImageProgress();
       Get.snackbar("Error", "$e");
