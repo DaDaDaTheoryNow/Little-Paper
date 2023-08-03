@@ -1,11 +1,9 @@
 import 'package:get/get.dart';
 import 'package:little_paper/common/services/getx_service/services/favorite_service.dart';
 import 'package:little_paper/common/services/getx_service/state.dart';
+import 'package:little_paper/pages/home/controller.dart';
 
 import 'package:little_paper/pages/searcher/controller.dart';
-
-import '../../../pages/favorite/controller.dart';
-import '../../../pages/home/controller.dart';
 
 class LittlePaperService extends GetxService {
   static LittlePaperService get to => Get.find<LittlePaperService>();
@@ -20,8 +18,8 @@ class LittlePaperService extends GetxService {
     state.downloadProgress = value;
   }
 
-  void resetDonwloadWallpaperImageProgress() {
-    Get.close(1);
+  void resetImageDonwloadProgress() {
+    Get.until((route) => !Get.isDialogOpen!); // close download dialog
     state.downloadProgress = 0;
   }
 
@@ -42,17 +40,12 @@ class LittlePaperService extends GetxService {
       await FavoriteService().favoriteButton(id);
 
   void tagButton(String tag) {
-    if (Get.isRegistered<FavoriteController>()) {
-      Get.close(2); // close image page from favorites
-    } else {
-      Get.close(1); // close image page
-    }
+    Get.until((route) => route.settings.name == "/home");
 
     final homeController = Get.find<HomeController>();
     final searcherController = Get.find<SearcherController>();
 
     homeController.state.pageController.jumpToPage(1); // jump to searcher page
-
     searcherController.putTagFromImageToTextField(tag); // put tag in textField
   }
 }

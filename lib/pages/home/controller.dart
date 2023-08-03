@@ -31,13 +31,6 @@ class HomeController extends GetxController {
         activeColor: Colors.white,
         inactiveColor: Colors.white,
         title: const Text("Search")),
-    BottomNavyBarItem(
-        icon: const Icon(
-          Icons.settings,
-        ),
-        activeColor: Colors.white,
-        inactiveColor: Colors.white,
-        title: const Text("Settings")),
   ];
 
   void handleOnItemSelected(index) {
@@ -75,5 +68,11 @@ class HomeController extends GetxController {
     });
 
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    subscription!.cancel();
+    super.onClose();
   }
 }

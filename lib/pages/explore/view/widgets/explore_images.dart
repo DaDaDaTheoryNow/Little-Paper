@@ -4,9 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/models/image.dart';
-import 'package:little_paper/common/widgets/check_internet_connection.dart';
-import 'package:little_paper/common/widgets/hurry_warning.dart';
-import 'package:little_paper/common/widgets/nothing_to_view.dart';
+
+import 'package:little_paper/common/widgets/errors/check_internet_connection.dart';
+import 'package:little_paper/common/widgets/errors/hurry_warning.dart';
+import 'package:little_paper/common/widgets/errors/nothing_to_view.dart';
+
 import 'package:little_paper/pages/explore/controller.dart';
 
 import '../../../../common/widgets/api_image.dart';
@@ -47,7 +49,7 @@ class ExploreImages extends StatelessWidget {
         if (controller.state.exploreImages.isEmpty &&
             exploreImagesSnapshot.connectionState == ConnectionState.waiting) {
           return SliverToBoxAdapter(
-            child: _buildLoading(),
+            child: _buildLoading(controller),
           );
         }
 
@@ -61,7 +63,8 @@ class ExploreImages extends StatelessWidget {
     );
   }
 
-  _buildLoading() {
+  _buildLoading(ExploreController controller) {
+    // fix long loading need
     return Container(
         margin: EdgeInsets.only(top: 50.h, bottom: 50.h),
         child: const Center(child: CircularProgressIndicator()));

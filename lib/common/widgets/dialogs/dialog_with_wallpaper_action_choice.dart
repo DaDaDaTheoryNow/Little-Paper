@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-getWallpaperDialogChoice(
+dialogWithWallpaperActionChoice(
     {required Function() saveToGalleryFunction,
-    required Function() setWallpaperFunction}) {
+    required Function() setFunction}) {
   return Get.defaultDialog(
       backgroundColor: Colors.black,
       title: "Choise",
@@ -28,7 +28,7 @@ getWallpaperDialogChoice(
           Container(
             margin: EdgeInsets.only(top: 4.h),
             child: ElevatedButton(
-                onPressed: setWallpaperFunction,
+                onPressed: setFunction,
                 child: Text("Set Wallpaper",
                     textAlign: TextAlign.center,
                     style: TextStyle(

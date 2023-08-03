@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NothingToView extends StatelessWidget {
   final String title;
-  final Function() reloadFunction;
+  final Function()? reloadFunction;
   const NothingToView(
       {required this.title, required this.reloadFunction, super.key});
 
@@ -12,25 +12,30 @@ class NothingToView extends StatelessWidget {
     return Center(
         child: Column(
       children: [
+        SizedBox(
+          height: 4.h,
+        ),
         Text(
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 20.sp,
+            fontSize: 19.sp,
           ),
         ),
         SizedBox(
           height: 10.h,
         ),
-        ElevatedButton(
-          onPressed: reloadFunction,
-          child: const Text(
-            "Reload",
-            style: TextStyle(color: Colors.black),
-          ),
-        )
+        (reloadFunction != null)
+            ? ElevatedButton(
+                onPressed: reloadFunction,
+                child: const Text(
+                  "Reload",
+                  style: TextStyle(color: Colors.black),
+                ),
+              )
+            : Container(),
       ],
     ));
   }

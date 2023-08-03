@@ -3,11 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 
-getWallpaperDialogDownloadProgress({required Function() cancelFunction}) {
+dialogWithImageDownloadProgress(
+    {required Function() function, required Function() cancelFunction}) {
+  // call general function
+  WidgetsBinding.instance.addPostFrameCallback((_) => function());
+
   return Get.defaultDialog(
-      onWillPop: () async {
-        return Future.value(false);
-      },
+      onWillPop: () async => Future.value(false),
       backgroundColor: Colors.black,
       title: "Download...",
       barrierDismissible: false,

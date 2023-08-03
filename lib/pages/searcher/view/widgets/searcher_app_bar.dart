@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/common/theme/app_colors.dart';
+import 'package:little_paper/common/widgets/app_bars/interactive_app_bar.dart';
 
-import 'package:little_paper/common/widgets/interactive_app_bar.dart';
 import 'package:little_paper/pages/searcher/controller.dart';
 import 'package:little_paper/pages/searcher/view/widgets/go_button.dart';
 

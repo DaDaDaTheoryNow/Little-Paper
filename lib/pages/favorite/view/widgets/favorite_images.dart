@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:little_paper/common/widgets/nothing_to_view.dart';
+import 'package:little_paper/common/widgets/errors/nothing_to_view.dart';
 import 'package:little_paper/pages/favorite/controller.dart';
 
 import '../../../../common/models/image.dart';
@@ -21,7 +21,7 @@ class FavoriteImages extends StatelessWidget {
           return SliverToBoxAdapter(
             child: NothingToView(
                 title: "Nothing To View, try add your favorite images",
-                reloadFunction: () => controller.handleReloadData()),
+                reloadFunction: null),
           );
         }
 

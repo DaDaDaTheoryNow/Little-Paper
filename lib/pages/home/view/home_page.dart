@@ -27,27 +27,20 @@ class HomePage extends GetView<HomeController> {
       children: [
         const ExplorePage(),
         const SearcherPage(),
-        Center(
-            child: Text(
-          "Settings - in progress...",
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 17.sp,
-              fontWeight: FontWeight.w500),
-        )),
       ],
     );
   }
 
   BottomNavyBar _buildBottomNavigationBar() {
     return BottomNavyBar(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       selectedIndex: controller.state.currentIndex,
       onItemSelected: controller.handleOnItemSelected,
       showElevation: false,
       borderRadius: BorderRadius.circular(46),
       iconSize: 30,
       itemCornerRadius: 46,
-      itemPadding: EdgeInsets.only(left: 15.w),
+      itemPadding: EdgeInsets.only(left: 10.w),
       backgroundColor: const Color.fromARGB(209, 255, 255, 255),
       items: controller.bottomNavigationBarItems,
     );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:little_paper/common/widgets/app_bars/back_app_bar.dart';
 
 import 'package:little_paper/pages/favorite/view/widgets/favorite_images.dart';
 
-import '../../../common/widgets/back_app_bar.dart';
 import '../controller.dart';
 
 class FavoritePage extends GetView<FavoriteController> {

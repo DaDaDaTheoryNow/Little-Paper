@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/models/image.dart';
-import 'package:little_paper/common/widgets/interactive_app_bar.dart';
+import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
+import 'package:little_paper/common/widgets/app_bars/interactive_app_bar.dart';
 
 import '../../../../common/theme/app_colors.dart';
-import '../services/getx_service/little_paper_service.dart';
 
 class BackAppBar extends StatelessWidget {
   final String title;

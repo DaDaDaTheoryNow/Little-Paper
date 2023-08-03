@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/widgets/api_image.dart';
-import 'package:little_paper/common/widgets/back_app_bar.dart';
-import 'package:little_paper/common/widgets/download_button.dart';
+import 'package:little_paper/common/widgets/app_bars/back_app_bar.dart';
+import 'package:little_paper/common/widgets/buttons/download_button.dart';
+
 import 'package:little_paper/pages/image/view/widgets/advanced_info.dart';
 import 'package:little_paper/pages/image/view/widgets/ratings.dart';
 import 'package:little_paper/pages/image/view/widgets/score.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:little_paper/common/widgets/app_bars/interactive_app_bar.dart';
 
-import 'package:little_paper/common/widgets/interactive_app_bar.dart';
 import 'package:little_paper/pages/explore/controller.dart';
 import 'package:little_paper/pages/explore/view/widgets/tag_button.dart';
 

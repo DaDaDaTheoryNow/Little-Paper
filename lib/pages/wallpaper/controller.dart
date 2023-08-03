@@ -1,58 +1,39 @@
 import 'package:get/get.dart';
+import 'package:little_paper/common/services/wallpaper/wallpaper_native_service.dart';
 import 'package:little_paper/common/services/wallpaper/wallpaper_service.dart';
+
+import 'package:little_paper/common/widgets/dialogs/dialog_with_image_download_progress.dart';
+import 'package:little_paper/common/widgets/dialogs/dialog_with_wallpaper_action_choice.dart';
 import 'package:little_paper/pages/wallpaper/state.dart';
-import 'package:little_paper/pages/wallpaper/view/widgets/get_dialog_choice.dart';
-import 'package:little_paper/common/widgets/get_dialog_download_progress.dart';
-import 'package:little_paper/common/services/android_native/android_native_wallpaper.dart';
 
 class WallpaperController extends GetxController {
   final state = WallpaperState();
+
   final WallpaperService wallpaperService = WallpaperService();
-  final AndroidNativeWallpaperService androidNativeWallpaperService =
-      AndroidNativeWallpaperService();
+  final WallpaperNativeService wallpaperNativeService =
+      WallpaperNativeService();
 
-  void saveWallpaperToGallery(String url) async {
-    bool permissionsIsGranted =
-        await androidNativeWallpaperService.permissionsForWallpaper();
-
-    if (permissionsIsGranted) {
-      Get.close(1); // close choice dialog
-      getWallpaperDialogDownloadProgress(
-          cancelFunction: () => wallpaperService.cancelFetchingImage());
-      wallpaperService.saveWallpaperToGalleryFromUrl(url);
-    } else {
-      Get.snackbar("Error", "You wasn't granted permissions");
-    }
+  void handleSetWallpaper() {
+    // dialog with choice what to do
+    dialogWithWallpaperActionChoice(
+      saveToGalleryFunction: () =>
+          saveWallpaperToGallery(state.imageModel.fileUrl),
+      setFunction: () => setWallpaper(state.imageModel.fileUrl),
+    );
   }
 
-  void setWallpaper(String url) async {
-    bool permissionsIsGranted =
-        await androidNativeWallpaperService.permissionsForWallpaper();
-
-    if (permissionsIsGranted) {
-      Get.close(1); // close choice dialog
-      getWallpaperDialogDownloadProgress(
-          cancelFunction: () => wallpaperService.cancelFetchingImage());
-      wallpaperService.setWallpaperFromUrl(url);
-    } else {
-      Get.snackbar("Error", "You wasn't granted permissions");
-    }
+  void saveWallpaperToGallery(String url) {
+    Get.until((route) => !Get.isDialogOpen!); // close choice dialog
+    dialogWithImageDownloadProgress(
+        function: () => wallpaperService.saveToGalleryFromUrl(url),
+        cancelFunction: () => wallpaperService.cancelFetchingImage());
   }
 
-  void handleSetWallpaper() async {
-    bool permissionsIsGranted =
-        await androidNativeWallpaperService.permissionsForWallpaper();
-
-    if (permissionsIsGranted) {
-      // dialog with choice what to do
-      getWallpaperDialogChoice(
-        saveToGalleryFunction: () =>
-            saveWallpaperToGallery(state.imageModel.fileUrl),
-        setWallpaperFunction: () => setWallpaper(state.imageModel.fileUrl),
-      );
-    } else {
-      Get.snackbar("Error", "You wasn't granted permissions");
-    }
+  void setWallpaper(String url) {
+    Get.until((route) => !Get.isDialogOpen!); // close choice dialog
+    dialogWithImageDownloadProgress(
+        function: () => wallpaperService.setFromUrl(url),
+        cancelFunction: () => wallpaperService.cancelFetchingImage());
   }
 
   @override

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:little_paper/common/widgets/download_button.dart';
-import 'package:little_paper/pages/wallpaper/controller.dart';
+import 'package:little_paper/common/widgets/app_bars/back_app_bar.dart';
+import 'package:little_paper/common/widgets/buttons/download_button.dart';
 
-import '../../../common/widgets/back_app_bar.dart';
+import 'package:little_paper/pages/wallpaper/controller.dart';
 
 class WallpaperPage extends GetView<WallpaperController> {
   const WallpaperPage({super.key});

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/common/pages.dart';
-import 'package:little_paper/common/widgets/little_paper_app_bar.dart';
+import 'package:little_paper/common/widgets/app_bars/little_paper_app_bar.dart';
 
 import 'common/theme/theme.dart';
 import 'pages/home/controller.dart';

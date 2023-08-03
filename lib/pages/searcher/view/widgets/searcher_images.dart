@@ -4,9 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/models/image.dart';
-import 'package:little_paper/common/widgets/check_internet_connection.dart';
-import 'package:little_paper/common/widgets/hurry_warning.dart';
-import 'package:little_paper/common/widgets/nothing_to_view.dart';
+import 'package:little_paper/common/widgets/errors/check_internet_connection.dart';
+import 'package:little_paper/common/widgets/errors/hurry_warning.dart';
+import 'package:little_paper/common/widgets/errors/nothing_to_view.dart';
+
 import 'package:little_paper/pages/searcher/controller.dart';
 
 import '../../../../common/widgets/api_image.dart';

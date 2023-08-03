@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../theme/app_colors.dart';
+import 'package:little_paper/common/theme/app_colors.dart';
 
 class DownloadButton extends StatelessWidget {
   final void Function() downloadFunction;

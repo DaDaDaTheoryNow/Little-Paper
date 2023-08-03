@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
 import 'package:little_paper/common/theme/app_colors.dart';
 
 import 'package:little_paper/pages/home/controller.dart';
-
-import '../services/getx_service/little_paper_service.dart';
 
 class FavoriteIconButton extends StatelessWidget {
   const FavoriteIconButton({super.key});
