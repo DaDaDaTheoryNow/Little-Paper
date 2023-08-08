@@ -10,38 +10,33 @@ import '../../common/services/getx_service/little_paper_service.dart';
 import '../../common/services/shared_preferences/shared_favorite_image_service.dart';
 import 'state.dart';
 
+import 'controller_helpers.dart';
+
 class FavoriteController extends GetxController {
   final state = FavoriteState();
   FavoriteController();
 
   final SharedFavoriteImageService sharedFavoriteImage =
-      SharedFavoriteImageService(); // custom class for convenient saving favorite images
-
+      SharedFavoriteImageService();
   final ApiService apiService = ApiService();
-
   final DefaultCacheManager manager = DefaultCacheManager();
-
   final ExploreController exploreController = Get.find<ExploreController>();
 
   void handleReloadData() async {
-    // update favorite page
-    state.imagesCountToView = 0;
+    resetImagesCount();
     state.favoriteImagesFuture = fetchData();
   }
 
   Future<List<ImageModel>> fetchData() async {
-    await LittlePaperService.to.updateFavoriteImages();
+    await updateFavoriteImages();
     state.favoriteImages = LittlePaperService.to.state.favoriteImages;
-
-    // set images count to view
-    state.imagesCountToView = state.favoriteImages.length;
-
+    updateImagesCount();
     return state.favoriteImages;
   }
 
   @override
   void onInit() async {
-    state.favoriteImagesFuture = fetchData();
+    setupInitialState();
     super.onInit();
   }
 }

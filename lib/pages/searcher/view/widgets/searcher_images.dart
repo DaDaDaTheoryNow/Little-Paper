@@ -5,8 +5,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/models/image.dart';
 import 'package:little_paper/common/widgets/errors/check_internet_connection.dart';
-import 'package:little_paper/common/widgets/errors/hurry_warning.dart';
 import 'package:little_paper/common/widgets/errors/nothing_to_view.dart';
+import 'package:little_paper/common/widgets/loading_indicator.dart';
 
 import 'package:little_paper/pages/searcher/controller.dart';
 
@@ -38,11 +38,9 @@ class SearcherImages extends StatelessWidget {
 
         if (searcherImagesSnapshot.hasError) {
           if (searcherImagesSnapshot.error is DioException &&
-              searcherImagesSnapshot.error
+              !searcherImagesSnapshot.error
                   .toString()
                   .contains("Request Cancelled")) {
-            return const SliverToBoxAdapter(child: HurryWarning());
-          } else {
             return SliverToBoxAdapter(
               child: CheckInternetConnection(
                 reloadFunction: () => controller.handleReloadData(),
@@ -64,8 +62,9 @@ class SearcherImages extends StatelessWidget {
         if (controller.state.searcherImages.isEmpty &&
             searcherImagesSnapshot.connectionState == ConnectionState.waiting) {
           return SliverToBoxAdapter(
-            child: _buildLoading(),
-          );
+              child: LoadingIndicator(
+            controller: controller,
+          ));
         }
 
         if (searcherImagesSnapshot.hasData &&

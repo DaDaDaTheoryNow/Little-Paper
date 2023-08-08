@@ -1,7 +1,7 @@
 String parseCombinedTags(List tagsList) {
   String combinedTags = tagsList
-      .where((item) => item[1] == true)
-      .map((item) => item[0])
+      .where((item) => item.isSelected == true)
+      .map((item) => item.name)
       .join("+");
 
   return combinedTags;

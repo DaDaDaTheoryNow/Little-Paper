@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:little_paper/common/models/image.dart';
 import 'package:little_paper/common/services/getx_service/little_paper_service.dart';
+import 'package:little_paper/common/widgets/fetch_more_loading.dart';
 import 'package:little_paper/pages/searcher/controller.dart';
 
 class FetchMoreSearcherImages extends StatelessWidget {
@@ -43,9 +44,7 @@ class FetchMoreSearcherImages extends StatelessWidget {
         }
 
         if (controller.state.fetchingMoreImages == true) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return FetchMoreLoading(controller: controller);
         }
 
         return Container();

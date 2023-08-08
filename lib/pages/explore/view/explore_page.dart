@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:little_paper/common/theme/app_colors.dart';
 import 'package:little_paper/pages/explore/controller.dart';
 import 'package:little_paper/pages/explore/view/widgets/explore_images.dart';
 import 'package:little_paper/pages/explore/view/widgets/fetch_more_explore_imags.dart';
@@ -25,11 +25,8 @@ class ExplorePage extends GetView<ExploreController> {
               );
             });
 
-            return LiquidPullToRefresh(
-              color: const Color.fromARGB(71, 9, 47, 112),
-              showChildOpacityTransition: false,
-              animSpeedFactor: 2,
-              height: 80.h,
+            return RefreshIndicator(
+              color: AppColors.blue,
               onRefresh: () => controller.handleReloadData(),
               child: CustomScrollView(
                   cacheExtent: 3000,

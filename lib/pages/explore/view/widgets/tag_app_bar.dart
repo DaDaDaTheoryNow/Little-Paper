@@ -23,7 +23,7 @@ class TagsAppBar extends StatelessWidget {
             children: List.generate(
               tags.length,
               (index) => TagButton(
-                  tag: tags[index][0],
+                  tag: tags[index].name,
                   exploreController: exploreController,
                   index: index,
                   context: context),
