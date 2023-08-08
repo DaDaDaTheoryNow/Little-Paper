@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:little_paper/common/services/getx_service/services/favorite_service.dart';
 import 'package:little_paper/common/services/getx_service/state.dart';
 import 'package:little_paper/pages/home/controller.dart';
-
 import 'package:little_paper/pages/searcher/controller.dart';
 
 class LittlePaperService extends GetxService {
@@ -11,7 +10,8 @@ class LittlePaperService extends GetxService {
   final state = LittlePaperState();
 
   void changeShowFavorite(bool value) {
-    Get.find<HomeController>().state.showFavorite = value;
+    final homeController = Get.find<HomeController>();
+    homeController.changeShowFavorite(value);
   }
 
   void setDonwloadWallpaperImageProgress(int value) {
@@ -19,18 +19,22 @@ class LittlePaperService extends GetxService {
   }
 
   void resetImageDonwloadProgress() {
-    Get.until((route) => !Get.isDialogOpen!); // close download dialog
+    closeDownloadDialog();
     state.downloadProgress = 0;
   }
 
+  void closeDownloadDialog() {
+    Get.until((route) => !Get.isDialogOpen!);
+  }
+
   void unfocusSearcherAppBar() {
-    if (Get.isRegistered<SearcherController>()) {
-      Get.find<SearcherController>().state.focusNode.unfocus();
-    }
+    final searcherController = Get.find<SearcherController>();
+    searcherController.unfocusSearcherAppBar();
   }
 
   bool checkInternetConnection() {
-    return Get.find<HomeController>().state.internetConnection;
+    final homeController = Get.find<HomeController>();
+    return homeController.checkInternetConnection();
   }
 
   Future<void> updateFavoriteImages() async =>
@@ -40,12 +44,22 @@ class LittlePaperService extends GetxService {
       await FavoriteService().favoriteButton(id);
 
   void tagButton(String tag) {
+    navigateToHome();
+    navigateToSearcher();
+    putTagInSearchField(tag);
+  }
+
+  void navigateToHome() {
     Get.until((route) => route.settings.name == "/home");
+  }
 
+  void navigateToSearcher() {
     final homeController = Get.find<HomeController>();
-    final searcherController = Get.find<SearcherController>();
+    homeController.navigateToSearcherPage();
+  }
 
-    homeController.state.pageController.jumpToPage(1); // jump to searcher page
-    searcherController.putTagFromImageToTextField(tag); // put tag in textField
+  void putTagInSearchField(String tag) {
+    final searcherController = Get.find<SearcherController>();
+    searcherController.putTagFromImageToTextField(tag);
   }
 }

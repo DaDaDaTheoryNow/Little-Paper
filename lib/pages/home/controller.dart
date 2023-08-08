@@ -12,35 +12,39 @@ import 'state.dart';
 
 class HomeController extends GetxController {
   final state = HomeState();
+  StreamSubscription? subscription;
+
   HomeController();
 
-  StreamSubscription? subscription;
-  List<BottomNavyBarItem> bottomNavigationBarItems = [
-    BottomNavyBarItem(
-      icon: const Icon(
-        Icons.explore,
-      ),
-      activeColor: Colors.white,
-      inactiveColor: Colors.white,
-      title: const Text("Explore"),
-    ),
-    BottomNavyBarItem(
-        icon: const Icon(
-          Icons.search_rounded,
+  List<BottomNavyBarItem> get bottomNavigationBarItems => [
+        BottomNavyBarItem(
+          icon: const Icon(
+            Icons.explore,
+          ),
+          activeColor: Colors.white,
+          inactiveColor: Colors.white,
+          title: const Text("Explore"),
         ),
-        activeColor: Colors.white,
-        inactiveColor: Colors.white,
-        title: const Text("Search")),
-  ];
+        BottomNavyBarItem(
+          icon: const Icon(
+            Icons.search_rounded,
+          ),
+          activeColor: Colors.white,
+          inactiveColor: Colors.white,
+          title: const Text("Search"),
+        ),
+      ];
 
-  void handleOnItemSelected(index) {
+  void handleOnItemSelected(int index) {
     state.currentIndex = index;
     state.pageController.jumpToPage(state.currentIndex);
 
     LittlePaperService.to.unfocusSearcherAppBar();
   }
 
-  void handleOnPageChanged(index) => state.currentIndex = index;
+  void handleOnPageChanged(int index) {
+    state.currentIndex = index;
+  }
 
   void handleGoToFavoritePage() {
     Get.delete<ImageController>();
@@ -48,11 +52,29 @@ class HomeController extends GetxController {
   }
 
   void handleGoToTelegram() async {
-    var url = Uri.parse("https://t.me/dadada17");
+    final url = Uri.parse("https://t.me/dadada17");
 
-    state.internetConnection
-        ? await launchUrl(url, mode: LaunchMode.externalApplication)
-        : Get.snackbar("Error", "You need internet connection");
+    if (checkInternetConnection()) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      showInternetConnectionError();
+    }
+  }
+
+  void navigateToSearcherPage() {
+    state.pageController.jumpToPage(1);
+  }
+
+  bool checkInternetConnection() {
+    return state.internetConnection;
+  }
+
+  void changeShowFavorite(value) {
+    state.showFavorite = value;
+  }
+
+  void showInternetConnectionError() {
+    Get.snackbar("Error", "You need an internet connection");
   }
 
   @override
@@ -60,11 +82,7 @@ class HomeController extends GetxController {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        state.internetConnection = false;
-      } else {
-        state.internetConnection = true;
-      }
+      state.internetConnection = (result != ConnectivityResult.none);
     });
 
     super.onInit();
@@ -72,7 +90,7 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
-    subscription!.cancel();
+    subscription?.cancel();
     super.onClose();
   }
 }

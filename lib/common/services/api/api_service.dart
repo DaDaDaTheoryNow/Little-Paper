@@ -2,32 +2,46 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class ApiService {
-  Dio dio = Dio();
-  CancelToken cancelToken = CancelToken();
+  final Dio dio;
+
+  ApiService() : dio = Dio();
 
   Future<String> fetchData(int limit, String tags, int page) async {
-    String baseUrl = "safebooru.org";
+    try {
+      final url = _buildUrl(limit, tags, page);
 
-    final url =
-        'https://$baseUrl?page=dapi&s=post&q=index&limit=$limit&tags=$tags&pid=$page';
+      final response = await _getResponse(url);
 
-    final response = await dio.get(
-      url,
-      cancelToken: cancelToken,
-    );
-
-    debugPrint(url.toString());
-
-    if (response.statusCode == 200) {
-      return response.data;
-    } else {
-      debugPrint('Ошибка: ${response.statusCode}');
-      return 'Ошибка: ${response.statusCode}';
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        debugPrint('Error: ${response.statusCode}');
+        return 'Error: ${response.statusCode}';
+      }
+    } catch (error) {
+      debugPrint('Error: $error');
+      return 'Error: $error';
     }
   }
 
   void cancelFetchingData() {
-    cancelToken.cancel("Request Cancelled");
-    cancelToken = CancelToken();
+    _getCancelToken().cancel("Request Cancelled");
+  }
+
+  Future<Response<dynamic>> _getResponse(String url) async {
+    return await dio.get(
+      url,
+      cancelToken: _getCancelToken(),
+    );
+  }
+
+  String _buildUrl(int limit, String tags, int page) {
+    const baseUrl = "safebooru.org";
+
+    return 'https://$baseUrl?page=dapi&s=post&q=index&limit=$limit&tags=$tags&pid=$page';
+  }
+
+  CancelToken _getCancelToken() {
+    return CancelToken();
   }
 }

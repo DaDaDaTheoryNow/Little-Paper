@@ -60,6 +60,10 @@ class SearcherController extends GetxController {
     });
   }
 
+  void unfocusSearcherAppBar() {
+    state.focusNode.unfocus();
+  }
+
   @override
   void onInit() {
     setupInitialState();
