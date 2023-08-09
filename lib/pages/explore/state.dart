@@ -10,7 +10,7 @@ class ExploreState {
     TagModel("original", false),
     TagModel("red_eyes", false),
     TagModel("genshin_impact", false),
-    TagModel("skirt", false),
+    TagModel("highres", false),
     TagModel("smile", false),
   ].obs;
   List<TagModel> get tags => _tags;
