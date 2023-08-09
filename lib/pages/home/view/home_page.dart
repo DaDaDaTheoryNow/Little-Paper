@@ -24,9 +24,9 @@ class HomePage extends GetView<HomeController> {
       physics: const NeverScrollableScrollPhysics(),
       controller: controller.state.pageController,
       onPageChanged: controller.handleOnPageChanged,
-      children: [
-        const ExplorePage(),
-        const SearcherPage(),
+      children: const [
+        ExplorePage(),
+        SearcherPage(),
       ],
     );
   }

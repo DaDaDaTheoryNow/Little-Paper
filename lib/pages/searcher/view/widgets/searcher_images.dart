@@ -77,12 +77,6 @@ class SearcherImages extends StatelessWidget {
     );
   }
 
-  _buildLoading() {
-    return Container(
-        margin: EdgeInsets.only(top: 50.h, bottom: 50.h),
-        child: const Center(child: CircularProgressIndicator()));
-  }
-
   _buildSearcherImages(SearcherController controller) {
     return Obx(
       () => SliverGrid(

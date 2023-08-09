@@ -18,7 +18,7 @@ class FavoriteImages extends StatelessWidget {
       builder: ((controller) {
         if (controller.state.favoriteImages.isEmpty &&
             favoriteImagesSnapshot.connectionState == ConnectionState.done) {
-          return SliverToBoxAdapter(
+          return const SliverToBoxAdapter(
             child: NothingToView(
                 title: "Nothing To View, try add your favorite images",
                 reloadFunction: null),
