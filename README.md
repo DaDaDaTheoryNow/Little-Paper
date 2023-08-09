@@ -1,16 +1,28 @@
-# little_paper
+# Little Paper
+Anime Wallpapers for your phone - Little Paper
 
-A new Flutter project.
+## Some screenshot
+![Little Paper](https://github.com/DaDaDaTheoryNow/Little-Paper/assets/105795587/b31dcc9c-e347-4ae5-8e8c-38a1c78a6ef7)
 
-## Getting Started
+# Searcher with 4.5m images
+![Searcher](https://github.com/DaDaDaTheoryNow/Little-Paper/assets/105795587/26eb602b-54c7-4555-ae5b-34ffb479aa29)
 
-This project is a starting point for a Flutter application.
+# All features of Wallpaper App
+![choice](https://github.com/DaDaDaTheoryNow/Little-Paper/assets/105795587/0c9435ca-1f95-42e8-9c32-19ff6ec210f2)
 
-A few resources to get you started if this is your first Flutter project:
+## Install
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```sh
+flutter pub get
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Usage
+
+```sh
+flutter run
+```
+
+## Used
+- Flutter
+- GetX
+- Image API
