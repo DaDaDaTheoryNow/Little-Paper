@@ -1,6 +1,9 @@
 # Little Paper
 Anime Wallpapers for your phone - Little Paper
 
+# Need Storage Permission
+Don't forget to give Storage Permission
+
 ## Screenshots
 ![Little Paper](https://github.com/DaDaDaTheoryNow/Little-Paper/assets/105795587/b31dcc9c-e347-4ae5-8e8c-38a1c78a6ef7)
 
@@ -21,7 +24,6 @@ flutter pub get
 ```sh
 flutter run
 ```
-# Need Storage Permission
 
 ## Used
 - Flutter
